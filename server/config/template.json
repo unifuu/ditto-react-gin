@@ -1,0 +1,33 @@
+{
+    "GinMode": "debug",
+    "HttpPort": 80,
+    "HttpsPort": 443,
+    "TcpPort": 5001,
+    "TlsCertFile": "",
+    "TlsKeyFile": "",
+    "GitHubPersonalAccessToken" : "",
+    "OpenAIToken": "",
+    "LineChannelSecret": "",
+    "LineChannelToken": "",
+    "FirebaseStorageBucket": "",
+    "FirebaseCredentialsFile": "",
+    "Log": "app.log",
+    "MySQL": {
+        "Username": "",
+        "Password": "",
+        "Database": ""
+    },
+    "MongoDB": {
+        "URL": "",
+        "Database": "",
+        "Username": "",
+        "Password": ""
+
+    },
+    "Redis": {
+        "Size": 0,
+        "Network": "",
+        "Address": "",
+        "Password": ""
+    }
+}
