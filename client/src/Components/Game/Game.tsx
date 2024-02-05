@@ -374,19 +374,19 @@ export default function Game() {
                 setTotalPages(data["total_page"]);
             })
 
-        fetch(`/api/game/badge?status=${tabStatus}`)
+        fetch(`/api/game/badges?status=${tabStatus}`)
             .then(resp => resp.json())
             .then(data => {
-                setPlayedCnt(data.badge["played"]);
-                setPlayingCnt(data.badge["playing"]);
-                setToPlayCnt(data.badge["to_play"]);
+                setPlayedCnt(data.badges["played"]);
+                setPlayingCnt(data.badges["playing"]);
+                setToPlayCnt(data.badges["to_play"]);
 
-                setAllCount(data.badge["all_platform"]);
-                setPcCount(data.badge["pc"]);
-                setPsCount(data.badge["playstation"]);
-                setNsCount(data.badge["nintendo_switch"]);
-                setXboxCount(data.badge["xbox"]);
-                setMobileCount(data.badge["mobile"]);
+                setAllCount(data.badges["all_platform"]);
+                setPcCount(data.badges["pc"]);
+                setPsCount(data.badges["playstation"]);
+                setNsCount(data.badges["nintendo_switch"]);
+                setXboxCount(data.badges["xbox"]);
+                setMobileCount(data.badges["mobile"]);
             })
     };
 

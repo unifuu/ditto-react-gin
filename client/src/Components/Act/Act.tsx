@@ -100,6 +100,9 @@ export default function Act() {
 
     // Activity Data Style Tabs: ['Grid', 'Timeline', 'Pie', 'Stack']
     const [tabDataStyle, setTabDataStyle] = useState("Grid")
+    const changeTabDataStyle = (event: React.SyntheticEvent, style: string) => {
+        setTabDataStyle(style)
+    }
 
     const pcScreen = useMediaQuery('(min-width:600px)')
     function matchScreen(pc: number, mobile: number): number {

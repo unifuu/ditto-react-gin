@@ -25,6 +25,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { BookData } from '../../interfaces'
 import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
 import EditIcon from '@mui/icons-material/Edit'
+import { formatDuration } from '../../utils'
 
 
 export default function Book() {
@@ -152,7 +153,7 @@ export default function Book() {
                     <TableCell align="right">{row.cur_page}</TableCell>
                     <TableCell align="right">{row.total_page}</TableCell>
                     <TableCell align="right">{row.page_percentage}</TableCell>
-                    <TableCell align="right">{row.total_time}</TableCell>
+                    <TableCell align="right">{ formatDuration(row.total_time) }</TableCell>
                 </TableRow>
                 {
                     row.logs !== null

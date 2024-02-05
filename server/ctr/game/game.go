@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	PAGE_LIMIT = 15
+	PAGE_LIMIT = 20
 )
 
 func API(e *gin.Engine) {
@@ -27,7 +27,7 @@ func API(e *gin.Engine) {
 		auth.Any("/update", update)
 		auth.POST("/update_status", updateStatus)
 		auth.GET("/", query)
-		auth.GET("/badge", badge)
+		auth.GET("/badges", badges)
 		auth.GET("/status/:status/:platform/:page", status)
 	}
 }
@@ -40,11 +40,11 @@ func updateStatus(c *gin.Context) {
 	h.GameService.Update(targetGame)
 }
 
-func badge(c *gin.Context) {
+func badges(c *gin.Context) {
 	status := game.Status(c.Query("status"))
-	badge := h.GameService.Badge(status)
+	badges := h.GameService.Badge(status)
 	c.JSON(http.StatusOK, gin.H{
-		"badge": badge,
+		"badges": badges,
 	})
 }
 
