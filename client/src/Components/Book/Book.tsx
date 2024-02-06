@@ -19,15 +19,15 @@ import { Tabs, Tab, Badge, Toolbar, Tooltip, Button, Dialog, DialogActions, Dial
 import dayjs from 'dayjs'
 
 // Icons
-import TodoIcon from '@mui/icons-material/SyncLock'
-import DoingIcon from '@mui/icons-material/Sync'
-import DoneIcon from '@mui/icons-material/PublishedWithChanges'
 import CreateBookIcon from '@mui/icons-material/PostAdd'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { BookData } from '../../interfaces'
 import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
 import EditIcon from '@mui/icons-material/Edit'
 import { formatDuration } from '../../utils'
+import { TodoIcon } from '../Common/Icons'
+import { DoingIcon} from '../Common/Icons'
+import { DoneIcon } from '../Common/Icons'
 
 
 export default function Book() {

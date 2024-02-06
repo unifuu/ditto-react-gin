@@ -26,7 +26,7 @@ import { DatePicker } from "@mui/x-date-pickers"
 import { LocalizationProvider } from "@mui/x-date-pickers"
 import { TabContext } from "@mui/lab"
 import { TabPanel } from "@mui/lab"
-import { DeepColorByType, LightColorByType } from "../Common/Color"
+import { DeepColorByType, LightColorByType } from "../Common/Colors"
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { SelectChangeEvent } from '@mui/material/Select'
 
@@ -302,6 +302,7 @@ export default function Act() {
                 ml: matchScreen(4, 1),
                 mr: matchScreen(4, 1),
                 p: 1,
+                mb: 2,
                 border: 2,
                 borderRadius: 1,
                 borderColor: 'divider'
