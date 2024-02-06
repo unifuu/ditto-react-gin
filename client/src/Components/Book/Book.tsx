@@ -19,7 +19,9 @@ import { Tabs, Tab, Badge, Toolbar, Tooltip, Button, Dialog, DialogActions, Dial
 import dayjs from 'dayjs'
 
 // Icons
-import { Battery, BatteryCharging, BatteryFull } from 'react-bootstrap-icons'
+import TodoIcon from '@mui/icons-material/SyncLock'
+import DoingIcon from '@mui/icons-material/Sync'
+import DoneIcon from '@mui/icons-material/PublishedWithChanges'
 import CreateBookIcon from '@mui/icons-material/PostAdd'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { BookData } from '../../interfaces'
@@ -39,14 +41,7 @@ export default function Book() {
     const [editing, setEditing] = useState<BookData>()
 
     // [Styled Component]
-    const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
-        '& .MuiBadge-badge': {
-            right: 1,
-            top: 1,
-            border: `1px solid ${theme.palette.background.paper}`,
-            padding: '0 2px',
-        },
-    }))
+
 
     // [Dialog]
     const [openCreateBook, setOpenCreateBook] = useState(false)
@@ -229,37 +224,19 @@ export default function Book() {
                         }}
                     >
                         <ToggleButton value="Read">
-                            <StyledBadge
-                                badgeContent={readCnt}
-                                sx={{ "& .MuiBadge-badge": {
-                                    color: 'black',
-                                    backgroundColor: 'white' } 
-                                }}
-                            >
-                                <BatteryFull fontSize="25" color="white" />
-                            </StyledBadge>
+                            <Badge badgeContent={readCnt}>
+                                <DoneIcon />
+                            </Badge>
                         </ToggleButton>
                         <ToggleButton value="Reading">
-                            <StyledBadge
-                                badgeContent={readingCnt}
-                                sx={{ "& .MuiBadge-badge": {
-                                    color: 'black',
-                                    backgroundColor: 'green' } 
-                                }}
-                            >
-                                <BatteryCharging fontSize="25" color="green" />
-                            </StyledBadge>
+                            <Badge badgeContent={readingCnt}>
+                                <DoingIcon />
+                            </Badge>
                         </ToggleButton>
                         <ToggleButton value="ToRead">
-                            <StyledBadge
-                                badgeContent={toReadCnt}
-                                sx={{ "& .MuiBadge-badge": {
-                                    color: 'black',
-                                    backgroundColor: 'red' } 
-                                }}
-                            >
-                                <Battery fontSize="25" color="red" />
-                            </StyledBadge>
+                            <Badge badgeContent={toReadCnt}>
+                                <TodoIcon />
+                            </Badge>
                         </ToggleButton>
                     </ToggleButtonGroup>
                     <Box display='flex' flexGrow={1} />
