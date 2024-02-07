@@ -647,12 +647,12 @@ export default function Game() {
 
                         <Box display='flex' flexGrow={1} />
 
-                        <SearchBar>
+                        {/* <SearchBar>
                             <SearchIconWrapper>
                                 <SearchIcon />
                             </SearchIconWrapper>
                             <StyledInputBase />
-                        </SearchBar>
+                        </SearchBar> */}
                     </Toolbar>
                 </AppBar>
 

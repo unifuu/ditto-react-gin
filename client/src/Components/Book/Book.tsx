@@ -149,10 +149,10 @@ export default function Book() {
                                     <Table size="small">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell>Date</TableCell>
-                                                <TableCell align="right">Start</TableCell>
-                                                <TableCell align="right">End</TableCell>
-                                                <TableCell align="right">Page</TableCell>
+                                                <TableCell colSpan={4}>Date</TableCell>
+                                                <TableCell colSpan={2} align="left">Start</TableCell>
+                                                <TableCell colSpan={2} align="left">End</TableCell>
+                                                <TableCell colSpan={2} align="left">Page</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
