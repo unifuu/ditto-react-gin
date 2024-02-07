@@ -4,7 +4,7 @@ import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
+import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
@@ -25,9 +25,9 @@ import { BookData } from '../../interfaces'
 import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
 import EditIcon from '@mui/icons-material/Edit'
 import { formatDuration } from '../../utils'
-import { TodoIcon } from '../Common/Icons'
-import { DoingIcon} from '../Common/Icons'
-import { DoneIcon } from '../Common/Icons'
+import { TodoBadge } from '../Common/Badges'
+import { DoingBadge } from '../Common/Badges'
+import { DoneBadge } from '../Common/Badges'
 
 
 export default function Book() {
@@ -114,31 +114,22 @@ export default function Book() {
         return (
             <Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    {
-                        row.logs !== null ?
-                            <TableCell>
-                                <IconButton
-                                    aria-label="expand row"
-                                    size="small"
-                                    onClick={() => setOpen(!open)}
-                                >
-                                    {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                                </IconButton>
-                            </TableCell>
-                            : <TableCell></TableCell>
-                    }
-                    <TableCell component="th" scope="row" align="left">
-                        {
-                            editMode ?
-                            <Link
-                                component="button"
-                                onClick={ () => {
-                                    fetchBookById(row.id)
-                                }}
+                    {row.logs !== null ?
+                        <TableCell>
+                            <IconButton
+                                size="small"
+                                onClick={() => setOpen(!open)}
                             >
+                                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                            </IconButton>
+                        </TableCell> : <TableCell></TableCell>
+                    }
+
+                    <TableCell component="th" scope="row" align="left">
+                        {editMode ?
+                            <Link component="button" onClick={() => { fetchBookById(row.id) }}>
                                 {row.title}
-                            </Link> :
-                            <>{row.title}</>
+                            </Link> : <>{row.title}</>
                         }
                     </TableCell>
                     <TableCell align="right">{row.author}</TableCell>
@@ -148,41 +139,39 @@ export default function Book() {
                     <TableCell align="right">{row.cur_page}</TableCell>
                     <TableCell align="right">{row.total_page}</TableCell>
                     <TableCell align="right">{row.page_percentage}</TableCell>
-                    <TableCell align="right">{ formatDuration(row.total_time) }</TableCell>
+                    <TableCell align="right">{formatDuration(row.total_time)}</TableCell>
                 </TableRow>
-                {
-                    row.logs !== null
-                        ? <TableRow>
-                            <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-                                <Collapse in={open} timeout="auto" unmountOnExit>
-                                    <Box sx={{ margin: 1 }}>
-                                        <Table size="small">
-                                            <TableHead>
-                                                <TableRow>
-                                                    <TableCell>Date</TableCell>
-                                                    <TableCell align="right">Start</TableCell>
-                                                    <TableCell align="right">End</TableCell>
-                                                    <TableCell align="right">Page</TableCell>
+                {row.logs !== null &&
+                    <TableRow>
+                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
+                            <Collapse in={open} timeout="auto" unmountOnExit>
+                                <Box sx={{ margin: 1 }}>
+                                    <Table size="small">
+                                        <TableHead>
+                                            <TableRow>
+                                                <TableCell>Date</TableCell>
+                                                <TableCell align="right">Start</TableCell>
+                                                <TableCell align="right">End</TableCell>
+                                                <TableCell align="right">Page</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                            {row.logs.map((log) => (
+                                                <TableRow key={log.date}>
+                                                    <TableCell component="th" scope="row">
+                                                        {log.date}
+                                                    </TableCell>
+                                                    <TableCell align="right">{log.start}</TableCell>
+                                                    <TableCell align="right">{log.end}</TableCell>
+                                                    <TableCell align="right">{log.cur_page}</TableCell>
                                                 </TableRow>
-                                            </TableHead>
-                                            <TableBody>
-                                                {row.logs.map((log) => (
-                                                    <TableRow>
-                                                        <TableCell component="th" scope="row">
-                                                            {log.date}
-                                                        </TableCell>
-                                                        <TableCell align="right">{log.start}</TableCell>
-                                                        <TableCell align="right">{log.end}</TableCell>
-                                                        <TableCell align="right">{log.cur_page}</TableCell>
-                                                    </TableRow>
-                                                ))}
-                                            </TableBody>
-                                        </Table>
-                                    </Box>
-                                </Collapse>
-                            </TableCell>
-                        </TableRow>
-                        : <></>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </Box>
+                            </Collapse>
+                        </TableCell>
+                    </TableRow>
                 }
             </Fragment>
         );
@@ -213,7 +202,6 @@ export default function Book() {
             }}
         >
             <AppBar position='static'>
-                {/* Toolbar */}
                 <Toolbar>
                     <ToggleButtonGroup
                         exclusive
@@ -224,23 +212,17 @@ export default function Book() {
                         }}
                     >
                         <ToggleButton value="Read">
-                            <Badge badgeContent={readCnt}>
-                                <DoneIcon />
-                            </Badge>
+                            {DoneBadge(readCnt)}
                         </ToggleButton>
                         <ToggleButton value="Reading">
-                            <Badge badgeContent={readingCnt}>
-                                <DoingIcon />
-                            </Badge>
+                            {DoingBadge(readingCnt)}
                         </ToggleButton>
                         <ToggleButton value="ToRead">
-                            <Badge badgeContent={toReadCnt}>
-                                <TodoIcon />
-                            </Badge>
+                            {TodoBadge(toReadCnt)}
                         </ToggleButton>
                     </ToggleButtonGroup>
                     <Box display='flex' flexGrow={1} />
-                    <ButtonGroup variant="outlined" aria-label="outlined button group">
+                    <ButtonGroup variant="outlined">
                         <IconButton
                             sx={{ color: editMode ? 'skyblue' : 'white' }}
                             onClick={handleEditButtonClick}
@@ -251,7 +233,6 @@ export default function Book() {
                             <CreateBookIcon />
                         </IconButton>
                     </ButtonGroup>
-                        
                 </Toolbar>
             </AppBar>
 
@@ -260,16 +241,15 @@ export default function Book() {
                     <TableHead>
                         <TableRow>
                             <TableCell />
-                            {/* { editMode ? <TableCell /> : <></> } */}
-                            <TableCell align="left">Title</TableCell>
-                            <TableCell align="right">Author</TableCell>
-                            <TableCell align="right">Publisher</TableCell>
-                            <TableCell align="right">Year</TableCell>
-                            <TableCell align="right">Genre</TableCell>
-                            <TableCell align="right">Current</TableCell>
-                            <TableCell align="right">Total</TableCell>
-                            <TableCell align="right">Progress</TableCell>
-                            <TableCell align="right">Time</TableCell>
+                            <TableCell align="left" style={{ fontWeight: 'bold' }}>Title</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Author</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Publisher</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Year</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Genre</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Current</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Total</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Progress</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Time</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -280,7 +260,7 @@ export default function Book() {
                 </Table>
             </TableContainer>
 
-            {/* Create Book Dialog */}
+            {/* [Create Book Dialog] */}
             <Dialog
                 open={openCreateBook}
                 onClose={handleCreateBookDialogClose}
@@ -347,8 +327,8 @@ export default function Book() {
                     </form>
                 </DialogContent>
             </Dialog>
-
-            {/* Edit Book Dialog */}
+            
+            {/* [Edit Book Dialog] */}
             <Dialog
                 open={openEditBook}
                 onClose={handleEditBookDialogClose}

@@ -11,7 +11,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork'
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline'
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline'
-import { AppBar } from '@mui/material'
+import { AppBar, ButtonGroup, ToggleButton, ToggleButtonGroup } from '@mui/material'
 import { Badge } from '@mui/material'
 import { BadgeProps } from '@mui/material'
 import { Box } from '@mui/material'
@@ -50,7 +50,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress'
 import { Code, CodeSlash } from 'react-bootstrap-icons'
 import { Battery, BatteryCharging, BatteryFull } from 'react-bootstrap-icons'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered'
 import Snackbar from '@mui/material/Snackbar'
@@ -71,6 +71,7 @@ import { Xbox } from 'react-bootstrap-icons'
 import { CheckSquare } from 'react-bootstrap-icons'
 import { Square } from 'react-bootstrap-icons'
 import { hourOfDuration, percentage } from '../../utils'
+import { DoingBadge, DoneBadge, TodoBadge } from '../Common/Badges'
 
 export default function Game() {
     const [stopwatch, setStopwatch] = useState<StopwatchData>()
@@ -133,7 +134,7 @@ export default function Game() {
         refresh()
     }, [tabStatus, tabPlatform, page])
 
-    const Search = styled('div')(({ theme }) => ({
+    const SearchBar = styled('div')(({ theme }) => ({
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
         backgroundColor: alpha(theme.palette.common.white, 0.15),
@@ -161,15 +162,15 @@ export default function Game() {
     const StyledInputBase = styled(InputBase)(({ theme }) => ({
         color: 'inherit',
         '& .MuiInputBase-input': {
-            padding: theme.spacing(1, 1, 1, 0),
+            padding: theme.spacing(1, 0.7, 1, 0),
             // vertical padding + font size from searchIcon
             paddingLeft: `calc(1em + ${theme.spacing(4)})`,
             transition: theme.transitions.create('width'),
             width: '100%',
             [theme.breakpoints.up('sm')]: {
-                width: '12ch',
+                width: '0ch',
                 '&:focus': {
-                    width: '20ch',
+                    width: '10ch',
                 },
             },
         },
@@ -425,10 +426,10 @@ export default function Game() {
 
     const handleStopStopwatch = () => {
         fetch(`/api/act/stopwatch/stop`, { method: "GET" })
-        .then(resp => {
-            handleWarningAlertOpen()
-            refresh()
-        })
+            .then(resp => {
+                handleWarningAlertOpen()
+                refresh()
+            })
     }
 
     const StyledRating = styled(Rating)({
@@ -456,685 +457,9 @@ export default function Game() {
     }
     const handleClose = () => { setAnchorEl(null) }
 
-    return (
-        <Box
-            sx={{
-                ml: matchScreen(4, 1),
-                mr: matchScreen(4, 1),
-                p: 1,
-                border: 2,
-                borderRadius: 1,
-                borderColor: 'divider'
-            }}
-        >
-            {/* Top Menu */}
-            <Grid container>
-                <Grid item>
-                    <AppBar
-                        sx={{ width: '50%', mr: '50%' }}
-                        style={{ background: 'transparent', boxShadow: 'none' }}
-                    >
-                        <Toolbar>
-                            <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-                                <IconButton
-                                    onClick={handleClick}
-                                    aria-controls={open ? 'account-menu' : undefined}
-                                    aria-haspopup="true"
-                                    aria-expanded={open ? 'true' : undefined}
-                                >
-                                    <MenuIcon
-                                        sx={{
-                                            fontSize: 32,
-                                            color: purple[100],
-                                            "&:hover": { color: purple[200], fontSize: 35 }
-                                        }}
-                                    />
-                                </IconButton>
-                            </Box>
-                            <Menu
-                                anchorEl={anchorEl}
-                                id="account-menu"
-                                open={open}
-                                onClose={handleClose}
-                                onClick={handleClose}
-                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                            >
-                                <MenuItem onClick={handleCreateGameDialogOpen}>
-                                    <ListItemIcon>
-                                        <PostAddIcon
-                                            sx={{
-                                                fontSize: 28,
-                                                color: purple[100],
-                                                "&:hover": { color: purple[200] }
-                                            }}
-                                        />
-                                    </ListItemIcon>
-                                    <Typography
-                                        sx={{
-                                            pl: 1,
-                                            color: purple[100]
-                                        }}
-                                    >
-                                        Create Game
-                                    </Typography>
-                                </MenuItem>
-
-                                <MenuItem onClick={handleSearchIncDialogOpen}>
-                                    <ListItemIcon>
-                                        <MapsHomeWorkIcon
-                                            sx={{
-                                                fontSize: 28,
-                                                color: purple[100],
-                                                "&:hover": { color: purple[200] }
-                                            }}
-                                        />
-                                    </ListItemIcon>
-                                    <Typography
-                                        sx={{
-                                            pl: 1,
-                                            color: purple[100]
-                                        }}
-                                    >
-                                        Manage Inc
-                                    </Typography>
-                                </MenuItem>
-
-                                <MenuItem onClick={handleClose}>
-                                    <ListItemIcon>
-                                        <FormatListNumberedIcon
-                                            sx={{
-                                                fontSize: 28,
-                                                color: purple[100],
-                                                "&:hover": { color: purple[200] }
-                                            }}
-                                        />
-                                    </ListItemIcon>
-                                    <Typography
-                                        sx={{
-                                            pl: 1,
-                                            color: purple[100]
-                                        }}
-                                    >
-                                        Ranking
-                                    </Typography>
-                                </MenuItem>
-                            </Menu>
-
-                            <Search>
-                                <SearchIconWrapper>
-                                    <SearchIcon />
-                                </SearchIconWrapper>
-                                <StyledInputBase
-                                    placeholder="Search…"
-                                    inputProps={{ 'aria-label': 'search' }}
-                                />
-                            </Search>
-                        </Toolbar>
-                    </AppBar>
-                </Grid>
-            </Grid>
-
-            <TabContext value={tabStatus}>
-                {/* Status Tab */}
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <Tabs
-                        indicatorColor="secondary"
-                        value={tabStatus}
-                        onChange={handleStatusChange}
-                        centered
-                    >
-                        {/* Played */}
-                        <Tab
-                            value="Played"
-                            icon={<Badge badgeContent={playedCnt} color="primary"><BatteryFull fontSize="30" color="white" /></Badge>}
-                        />
-
-                        {/* Playing */}
-                        <Tab
-                            value="Playing"
-                            icon={<Badge badgeContent={playingCnt} color="success"><BatteryCharging fontSize="30" color="green" /></Badge>}
-                        />
-
-                        {/* ToPlay */}
-                        <Tab
-                            value="ToPlay"
-                            icon={<Badge badgeContent={toPlayCnt} color="error"><Battery fontSize="30" color="red" /></Badge>}
-                        />
-                    </Tabs>
-                </Box>
-
-                <TabPanel value={tabStatus}>
-                    <Grid container spacing={2}>
-                        {/* Platform Tab */}
-                        <Grid
-                            item
-                            style={{ width: '100px' }}
-                            sx={{
-                                ml: -5,
-                                borderRight: 1,
-                                borderColor: 'divider'
-                            }}
-                        >
-                            <Tabs
-                                variant="fullWidth"
-                                orientation="vertical"
-                                TabIndicatorProps={{
-                                    style: { background: platformColor(tabPlatform) }
-                                }}
-                                value={tabPlatform}
-                                onChange={handlePlatformChange}
-                            >
-                                <Tab
-                                    value="All"
-                                    icon={
-                                        <StyledBadge
-                                            badgeContent={allCount}
-                                            sx={{ "& .MuiBadge-badge": {
-                                                color: 'black',
-                                                backgroundColor: platformColor(tabPlatform === 'All' ? tabPlatform : '') } 
-                                            }}
-                                        >
-                                            {tabPlatform === 'All'
-                                                ? <CheckSquare color='#FFF176' size={35} />
-                                                : <Square color='gray' size={35} />}
-                                        </StyledBadge>
-                                    }
-                                />
-
-                                <Tab
-                                    value="PC"
-                                    sx={{ mt: 1 }}
-                                    icon={
-                                        <StyledBadge
-                                            badgeContent={pcCount}
-                                            sx={{ "& .MuiBadge-badge": {
-                                                color: 'black',
-                                                backgroundColor: platformColor(tabPlatform === 'PC' ? tabPlatform : '') }
-                                            }}
-                                        >
-                                            <PcDisplay color={ platformColor(tabPlatform === 'PC' ? tabPlatform : '') } size={35} />
-                                        </StyledBadge>
-                                    }
-                                />
-
-                                <Tab
-                                    value="PlayStation"
-                                    sx={{ mt: 1 }}
-                                    icon={
-                                        <StyledBadge
-                                            badgeContent={psCount}
-                                            sx={{ "& .MuiBadge-badge": {
-                                                color: 'black',
-                                                backgroundColor: platformColor(tabPlatform === 'PlayStation' ? tabPlatform : '') }
-                                            }}
-                                        >
-                                            <Playstation color={ platformColor(tabPlatform === 'PlayStation' ? tabPlatform : '') } size={35} />
-                                        </StyledBadge>
-                                    }
-                                />
-
-                                <Tab
-                                    value="Nintendo Switch"
-                                    sx={{ mt: 1 }}
-                                    icon={
-                                        <StyledBadge
-                                            badgeContent={nsCount}
-                                            sx={{ "& .MuiBadge-badge": {
-                                                color: 'black',
-                                                backgroundColor: platformColor(tabPlatform === 'Nintendo Switch' ? tabPlatform : '') }
-                                            }}
-                                        >
-                                            <NintendoSwitch color={ platformColor(tabPlatform === 'Nintendo Switch' ? tabPlatform : '') } size={35} />
-                                        </StyledBadge>
-                                    }
-                                />
-
-                                <Tab
-                                    value="Xbox"
-                                    sx={{ mt: 1 }}
-                                    icon={
-                                        <StyledBadge 
-                                            badgeContent={xboxCount}
-                                            sx={{ "& .MuiBadge-badge": {
-                                                color: 'black',
-                                                backgroundColor: platformColor(tabPlatform === 'Xbox' ? tabPlatform : '') }
-                                            }}
-                                        >
-                                            <Xbox color={ platformColor(tabPlatform === 'Xbox' ? tabPlatform : '') } size={35} />
-                                        </StyledBadge>
-                                    }
-                                />
-
-                                <Tab
-                                    value="Mobile"
-                                    sx={{ mt: 1 }}
-                                    icon={
-                                        <StyledBadge
-                                            sx={{ "& .MuiBadge-badge": {
-                                                color: 'black',
-                                                backgroundColor: platformColor(tabPlatform === 'Mobile' ? tabPlatform : '') }
-                                            }}
-                                            badgeContent={mobileCount}
-                                        >
-                                            <Tablet color={ platformColor(tabPlatform === 'Mobile' ? tabPlatform : '') } size={35} />
-                                        </StyledBadge>
-                                    }
-                                />
-                            </Tabs>
-                        </Grid>
-
-                        <Grid
-                            item
-                            xs={ true }
-                            justifyContent='center'
-                            alignItems='center'
-                        >
-                            <Grid container spacing={3}>
-                                {games?.map((g, i) => (
-                                    <Grid item>
-                                        <Card
-                                            sx={{
-                                                maxWidth: 250,
-                                                maxHeight: 565,
-                                            }}
-                                            key={g.id}
-                                        >
-                                            <CardMedia
-                                                component="img"
-                                                height="250"
-                                                image={"/assets/images/games/" + g.id + ".webp"}
-                                            />
-                                            <CardContent>
-                                                <Tooltip title="">
-                                                    <Typography
-                                                        variant="subtitle1"
-                                                        align="center"
-                                                        color="text.info"
-                                                        sx={{ height: 30 }}
-                                                    >
-                                                        {g.title}
-                                                    </Typography>
-                                                </Tooltip>
-                                            </CardContent>
-
-                                            <CardActions disableSpacing>
-                                                <Tooltip title="Property">
-                                                    <IconButton onClick={() => handleUpdateGameDialogOpen(g.id)}>
-                                                        <TuneIcon />
-                                                    </IconButton>
-                                                </Tooltip>
-
-                                                {stopwatch?.target_id == g.id ?
-                                                    <Tooltip sx={{ ml: -1.5 }} title="Stop">
-                                                        <IconButton onClick={() => handleStopStopwatch()}>
-                                                            <AlarmOffIcon color="warning" />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                    :
-                                                    <Tooltip sx={{ ml: -1.5 }} title="Start">
-                                                        <IconButton onClick={() => handleStartGaming(g.id)}>
-                                                            <PlayCircleOutlineIcon color="success" />
-                                                        </IconButton>
-                                                    </Tooltip>}
-                                            </CardActions>
-
-                                            <CardContent sx={{ mt: -4 }}>
-                                                <Box
-                                                    sx={{
-                                                        mx: "auto",
-                                                        display: 'flex',
-                                                        flexDirection: 'column',
-                                                        alignItems: 'center',
-                                                        '& > *': { m: 1 },
-                                                    }}
-                                                >
-                                                    <TextField
-                                                        fullWidth
-                                                        size="small"
-                                                        sx={{ pt: 0.5 }}
-                                                        inputProps={{
-                                                            style: { textAlign: 'right' },
-                                                            readOnly: true,
-                                                        }}
-                                                        value={rating(g.rating)}
-                                                        InputProps={{
-                                                            startAdornment: (
-                                                                <InputAdornment position="start">
-                                                                    {g.platform === 'Mobile' ? <Tablet /> : <></>}
-                                                                    {g.platform === 'Nintendo Switch' ? <NintendoSwitch /> : <></>}
-                                                                    {g.platform === 'PC' ? <PcDisplay /> : <></>}
-                                                                    {g.platform === 'PlayStation' ? <Playstation /> : <></>}
-                                                                    {g.platform === 'Xbox' ? <Xbox /> : <></>}
-                                                                </InputAdornment>
-                                                            )
-                                                        }}
-                                                    />
-
-                                                    <TextField
-                                                        fullWidth
-                                                        size="small"
-                                                        sx={{ pt: 0.5 }}
-                                                        inputProps={{
-                                                            style: { textAlign: 'right' },
-                                                            readOnly: true,
-                                                        }}
-                                                        value={g.developer}
-                                                        InputProps={{
-                                                            startAdornment: (
-                                                                <InputAdornment position="start">
-                                                                    <Code />
-                                                                </InputAdornment>
-                                                            )
-                                                        }}
-                                                    />
-
-                                                    <TextField
-                                                        fullWidth
-                                                        size="small"
-                                                        sx={{ pt: 0.5 }}
-                                                        inputProps={{ style: { textAlign: 'right' }, readOnly: true }}
-                                                        value={g.publisher}
-                                                        InputProps={{
-                                                            startAdornment: (
-                                                                <InputAdornment position="start"><CodeSlash /></InputAdornment>
-                                                            )
-                                                        }}
-                                                    />
-
-                                                    <TextField
-                                                        fullWidth
-                                                        size="small"
-                                                        sx={{ pt: 0.5 }}
-                                                        inputProps={{ style: { textAlign: 'right' }, readOnly: true }}
-                                                        value={hourOfDuration(g.total_time)}
-                                                        InputProps={{
-                                                            startAdornment: (
-                                                                <InputAdornment position="start">
-                                                                    {g.status === 'Played' ? <BatteryFull /> : <></>}
-                                                                    {g.status === 'Playing' ? <BatteryCharging /> : <></>}
-                                                                    {g.status === 'ToPlay' ? <Battery /> : <></>}
-                                                                </InputAdornment>
-                                                            ),
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">Hour(s)</InputAdornment>
-                                                            )
-                                                        }}
-                                                    />
-
-                                                    <Box sx={{ width: '100%' }}>
-                                                        <Progressing value={ percentage(g.total_time, g.how_long_to_beat) } />
-                                                    </Box>
-                                                </Box>
-                                            </CardContent>
-                                        </Card>
-                                    </Grid>
-                                ))}
-                            </Grid>
-
-                            <Box
-                                sx={{ width: '100%', pt: 3, pb: 3 }}
-                                display="flex"
-                                justifyContent="center"
-                                alignItems="center"
-                            >
-                                {totalPages > 1 ?
-                                    <Pagination
-                                        count={totalPages}
-                                        page={page}
-                                        onChange={handlePageChange}
-                                        variant="outlined"
-                                        color="secondary"
-                                    />
-                                    : <></>}
-                            </Box>
-                        </Grid>
-                    </Grid>
-
-
-                </TabPanel>
-
-            </TabContext>
-
-            {/* Start Game Snackbar */}
-            <Snackbar open={successAlertOpen} autoHideDuration={3000} onClose={handleSuccessAlertClose}>
-                <Alert severity="success" onClose={handleSuccessAlertClose} sx={{ width: '100%' }}>Started!</Alert>
-            </Snackbar>
-            <Snackbar open={warningAlertOpen} autoHideDuration={3000} onClose={handleWarningAlertClose}>
-                <Alert severity="warning" onClose={handleWarningAlertClose} sx={{ width: '100%' }}>Closed!</Alert>
-            </Snackbar>
-            <Snackbar open={errorAlertOpen} autoHideDuration={3000} onClose={handleErrorAlertClose}>
-                <Alert severity="error" onClose={handleErrorAlertClose} sx={{ width: '100%' }}>Failed!</Alert>
-            </Snackbar>
-
-            {/* Update Game Dialog */}
-            <Dialog
-                open={openUpdateGameDialog}
-                onClose={handleUpdateGameDialogClose}
-            >
-                <DialogTitle align="center">
-                    Update Game
-                </DialogTitle>
-                <DialogContent>
-                    <form method="post" encType="multipart/form-data" action="/api/game/update">
-                        <FormControl fullWidth sx={{ mt: 1 }}>
-                            <TextField
-                                name="id"
-                                label="Id"
-                                defaultValue={updateGame.game.id}
-                                inputProps={{
-                                    readOnly: true
-                                }}
-                            />
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <TextField
-                                name="title"
-                                label="Title"
-                                defaultValue={updateGame.game.title}
-                            >
-                            </TextField>
-                        </FormControl>
-
-                        <Grid container>
-                            <Grid item sx={{ width: '48%' }}>
-                                <FormControl fullWidth sx={{ mt: 2 }}>
-                                    <InputLabel htmlFor="developer">Developer</InputLabel>
-                                    <Select
-                                        name="developer_id"
-                                        label="Developer"
-                                        defaultValue={updateGame.game.developer_id}
-                                    >
-                                        {updateGame.developers?.map((dev: any, index) => {
-                                            return (
-                                                <MenuItem key={index} value={dev.id}>{dev.name}</MenuItem>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item sx={{ width: '4%' }} />
-
-                            <Grid item sx={{ width: '48%' }}>
-                                <FormControl fullWidth sx={{ mt: 2 }}>
-                                    <InputLabel htmlFor="publisher">Publisher</InputLabel>
-                                    <Select
-                                        name="publisher_id"
-                                        label="Publisher"
-                                        defaultValue={updateGame.game.publisher_id}
-                                    >
-                                        {updateGame.publishers?.map((pub: any, index) => {
-                                            return (
-                                                <MenuItem key={index} value={pub.id}>{pub.name}</MenuItem>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <Grid container>
-                            <Grid item sx={{ width: '48%' }}>
-                                <FormControl
-                                    fullWidth
-                                    sx={{ mt: 2 }}
-                                >
-                                    <InputLabel htmlFor="Status">Status</InputLabel>
-                                    <Select
-                                        name="status"
-                                        label="Status"
-                                        defaultValue={updateGame.game.status}
-                                    >
-                                        <MenuItem key="Played" value="Played">Played</MenuItem>
-                                        <MenuItem key="Playing" value="Playing">Playing</MenuItem>
-                                        <MenuItem key="ToPlay" value="ToPlay">ToPlay</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item sx={{ width: '4%' }} />
-
-                            <Grid item sx={{ width: '48%' }}>
-                                <FormControl
-                                    fullWidth
-                                    sx={{ mt: 2 }}
-                                >
-                                    <InputLabel htmlFor="Genre">Genre</InputLabel>
-                                    <Select
-                                        name="genre"
-                                        label="Genre"
-                                        defaultValue={updateGame.game.genre}
-                                    >
-                                        {updateGame.genres?.map((genre: any, index) => {
-                                            return (
-                                                <MenuItem key={index} value={genre}>{genre}</MenuItem>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <Grid container>
-                            <Grid item sx={{ width: '48%' }}>
-                                <FormControl
-                                    fullWidth
-                                    sx={{ mt: 2 }}
-                                >
-                                    <InputLabel htmlFor="Platform">Platform</InputLabel>
-                                    <Select
-                                        name="platform"
-                                        label="Platform"
-                                        defaultValue={updateGame.game.platform}
-                                    >
-                                        {updateGame.platforms?.map((platform: any, index) => {
-                                            return (
-                                                <MenuItem key={index} value={platform}>{platform}</MenuItem>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item sx={{ width: '4%' }}></Grid>
-                            <Grid item sx={{ width: '48%' }}>
-                                <FormControl fullWidth sx={{ mt: 2 }}>
-                                    <InputLabel htmlFor="Rating">Rating</InputLabel>
-                                    <Select
-                                        name="rating"
-                                        label="Rating"
-                                        defaultValue={updateGame.game.rating}
-                                    >
-                                        <MenuItem key="10" value="10">Perfect</MenuItem>
-                                        <MenuItem key="9" value="9">Excellent</MenuItem>
-                                        <MenuItem key="8" value="8">Fantastic</MenuItem>
-                                        <MenuItem key="7" value="7">Great</MenuItem>
-                                        <MenuItem key="6" value="6">Good</MenuItem>
-                                        <MenuItem key="5" value="5">Fine</MenuItem>
-                                        <MenuItem key="4" value="4">Not Satisfied</MenuItem>
-                                        <MenuItem key="3" value="3">Boring</MenuItem>
-                                        <MenuItem key="2" value="2">Bad</MenuItem>
-                                        <MenuItem key="1" value="1">Trash</MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <Grid container sx={{ mt: 2 }}>
-                            <Grid item sx={{ width: '30%' }}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        name="played_hour"
-                                        type="number"
-                                        label="Played Hour"
-                                        defaultValue={updateGame.played_hour}
-                                    >
-                                    </TextField>
-                                </FormControl>
-                            </Grid>
-                            <Grid item sx={{ width: '1%' }}></Grid>
-                            <Grid item sx={{ width: '17%' }}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        name="played_min"
-                                        type="number"
-                                        label="Min"
-                                        defaultValue={updateGame.played_min}
-                                    >
-                                    </TextField>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item sx={{ width: '4%' }}></Grid>
-
-                            <Grid item sx={{ width: '30%' }}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        name="hltb_hour"
-                                        type="number"
-                                        label="How Long To Beat Hour"
-                                        defaultValue={updateGame.hltb_hour}
-                                    >
-                                    </TextField>
-                                </FormControl>
-                            </Grid>
-
-                            <Grid item sx={{ width: '1%' }}></Grid>
-
-                            <Grid item sx={{ width: '17%' }}>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        name="hltb_min"
-                                        type="number"
-                                        label="Min"
-                                        defaultValue={updateGame.hltb_min}
-                                    >
-                                    </TextField>
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <Grid container sx={{ mt: 1 }} justifyContent="flex-end">
-                            <Grid item xs={12}>
-                                <FormControl >
-                                    <input type="file" id="cover" name="cover" />
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-
-                        <DialogActions style={{ justifyContent: "space-between" }} sx={{ mt: 1, mb: -1, ml: -1, mr: -1 }}>
-                            <Button color="error" onClick={e => handleDeleteGame(updateGame.game.id.toString())}>Delete</Button>
-                            <Box>
-                                <Button color="secondary" onClick={handleUpdateGameDialogClose}>Cancel</Button>
-                                <Button color="success" type="submit">Update</Button>
-                            </Box>
-                        </DialogActions>
-                    </form>
-                </DialogContent>
-            </Dialog>
-
-            {/* Create Game Dialog */}
+    // [Dialogs]
+    const CreateGameDialog = () => {
+        return (
             <Dialog
                 open={openCreateGameDialog}
                 onClose={handleCreateGameDialogClose}
@@ -1191,157 +516,845 @@ export default function Game() {
                     </form>
                 </DialogContent>
             </Dialog>
+        )
+    }
 
-            {/* Search Inc Dialog */}
-            <Dialog
-                open={openSearchIncDialog}
-                onClose={handleSearchIncDialogClose}
+    return (
+        <Fragment>
+            <AppBar
+                sx={{ width: '25%', mr: '75%' }}
+                style={{ background: 'transparent', boxShadow: 'none' }}
             >
-                <DialogTitle align="center">
-                    Search Inc
-                    <IconButton onClick={handleCreateIncDialogOpen}>
-                        <AddCircleOutlineIcon sx={{ color: "gray" }} />
-                    </IconButton>
-                </DialogTitle>
-
-                <Divider />
-
-                <DialogContent>
-                    <form method="post" action="/api/inc/search">
-                        <Paper
-                            component="form"
-                            sx={{ display: 'flex', alignItems: 'center' }}
+                <Toolbar>
+                    <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                        <IconButton
+                            onClick={handleClick}
+                            aria-controls={open ? 'account-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? 'true' : undefined}
                         >
-                            <InputBase
-                                sx={{ ml: 2, flex: 1 }}
-                                placeholder="Inc name"
-                                name="keyword"
-                                onChange={e => setSearchIncKeyword(e.target.value)}
-                            />
-
-                            <IconButton
-                                type="button"
-                                color="success"
-                                sx={{ p: '10px' }}
-                                aria-label="search"
-                                onClick={() => searchInc(searchIncKeyword)}
-                            >
-                                <SearchIcon />
-                            </IconButton>
-                        </Paper>
-
-                        <List sx={{ p: '2px 4px' }}>
-                            {searchedIncResult.map((inc, index) => (
-                                <>
-                                    <ListItem
-                                        key={inc.id}
-                                        disableGutters
-                                        secondaryAction={
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="delete"
-                                                onClick={() => handleToUpdateInc(inc.id, inc.name, inc.is_dev, inc.is_pub)}
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-                                        }
-                                    >
-                                        <ListItemText primary={inc.name} />
-                                    </ListItem>
-                                    {index !== searchedIncResult.length - 1 ? <Divider /> : <></>}
-                                </>
-                            ))}
-                        </List>
-                        <Divider />
-                        <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
-                            <Button color="secondary" onClick={handleSearchIncDialogClose}>Close</Button>
-                        </DialogActions>
-                    </form>
-                </DialogContent>
-            </Dialog>
-
-            {/* Create Inc Dialog */}
-            <Dialog
-                open={openCreateIncDialog}
-                onClose={handleCreateIncDialogClose}
-            >
-                <DialogTitle align="center">Create Inc</DialogTitle>
-                <Divider />
-                <DialogContent>
-                    <form method="post" action="/api/inc/create">
-                        <FormControl fullWidth sx={{ mt: 1, minWidth: 250 }}>
-                            <TextField name="name" label="Name" required>
-                            </TextField>
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 1 }} component="fieldset" variant="standard">
-                            <FormGroup>
-                                <FormControlLabel control={<Switch value="1" name="is_developer" />} label="Developer" />
-                                <FormControlLabel control={<Switch value="1" name="is_publisher" />} label="Publisher" />
-                            </FormGroup>
-                        </FormControl>
-
-                        <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
-                            <Button color="secondary" onClick={handleCreateIncDialogClose}>Cancel</Button>
-                            <Button color="success" type="submit">Create</Button>
-                        </DialogActions>
-                    </form>
-                </DialogContent>
-            </Dialog>
-
-            {/* Update Inc Dialog */}
-            <Dialog
-                open={openUpdateIncDialog}
-                onClose={handleUpdateIncDialogClose}
-            >
-                <DialogTitle align="center">Update Inc</DialogTitle>
-                <Divider />
-                <DialogContent>
-                    <form method="post" action="/api/inc/update">
-                        <FormControl fullWidth sx={{ mt: 1, minWidth: 250 }}>
-                            {/* <input type='hidden' name="id" value="" { ...props } /> */}
-                            <TextField
-                                name="id"
-                                label="ID"
-                                defaultValue={updatingInc?.id}
-                                inputProps={{
-                                    readOnly: true
+                            <MenuIcon
+                                sx={{
+                                    fontSize: 32,
+                                    color: purple[100],
+                                    "&:hover": { color: purple[200], fontSize: 35 }
                                 }}
                             />
-                        </FormControl>
+                        </IconButton>
+                    </Box>
+                    <Menu
+                        anchorEl={anchorEl}
+                        id="account-menu"
+                        open={open}
+                        onClose={handleClose}
+                        onClick={handleClose}
+                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                    >
+                        <MenuItem onClick={handleCreateGameDialogOpen}>
+                            <ListItemIcon>
+                                <PostAddIcon
+                                    sx={{
+                                        fontSize: 28,
+                                        color: purple[100],
+                                        "&:hover": { color: purple[200] }
+                                    }}
+                                />
+                            </ListItemIcon>
+                            <Typography
+                                sx={{
+                                    pl: 1,
+                                    color: purple[100]
+                                }}
+                            >
+                                Create Game
+                            </Typography>
+                        </MenuItem>
 
-                        <FormControl fullWidth sx={{ mt: 1, minWidth: 250 }}>
-                            <TextField
-                                name="name"
-                                label="Name"
-                                defaultValue={updatingInc?.name}
-                                required></TextField>
-                        </FormControl>
+                        <MenuItem onClick={handleSearchIncDialogOpen}>
+                            <ListItemIcon>
+                                <MapsHomeWorkIcon
+                                    sx={{
+                                        fontSize: 28,
+                                        color: purple[100],
+                                        "&:hover": { color: purple[200] }
+                                    }}
+                                />
+                            </ListItemIcon>
+                            <Typography
+                                sx={{
+                                    pl: 1,
+                                    color: purple[100]
+                                }}
+                            >
+                                Manage Inc
+                            </Typography>
+                        </MenuItem>
 
-                        <FormControl fullWidth sx={{ mt: 1 }} component="fieldset" variant="standard">
-                            <FormGroup>
-                                <FormControlLabel
-                                    control={
-                                        <Switch value="1" name="is_dev" defaultChecked={updatingInc?.is_dev} />
-                                    }
-                                    label="Developer" />
+                        <MenuItem onClick={handleClose}>
+                            <ListItemIcon>
+                                <FormatListNumberedIcon
+                                    sx={{
+                                        fontSize: 28,
+                                        color: purple[100],
+                                        "&:hover": { color: purple[200] }
+                                    }}
+                                />
+                            </ListItemIcon>
+                            <Typography
+                                sx={{
+                                    pl: 1,
+                                    color: purple[100]
+                                }}
+                            >
+                                Ranking
+                            </Typography>
+                        </MenuItem>
+                    </Menu>
+                </Toolbar>
+            </AppBar>
 
-                                <FormControlLabel
-                                    control={
-                                        <Switch value="1" name="is_pub" defaultChecked={updatingInc?.is_pub} />
-                                    }
-                                    label="Publisher" />
-                            </FormGroup>
-                        </FormControl>
+            <Box
+                sx={{
+                    ml: matchScreen(4, 1),
+                    mr: matchScreen(4, 1),
+                    p: 1,
+                    border: 2,
+                    borderRadius: 1,
+                    borderColor: 'divider'
+                }}
+            >
+                <AppBar position='static'>
+                    <Toolbar>
+                        <ToggleButtonGroup
+                            exclusive
+                            sx={{ mt: 1, mb: 1 }}
+                            value={tabStatus}
+                            onChange={(event: React.MouseEvent<HTMLElement, MouseEvent>, value: any) => {
+                                setTabStatus(value)
+                            }}
+                        >
+                            <ToggleButton value="Played">
+                                {DoneBadge(playedCnt)}
+                            </ToggleButton>
+                            <ToggleButton value="Playing">
+                                {DoingBadge(playingCnt)}
+                            </ToggleButton>
+                            <ToggleButton value="ToRead">
+                                {TodoBadge(toPlayCnt)}
+                            </ToggleButton>
+                        </ToggleButtonGroup>
 
-                        <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
-                            <Button color="secondary" onClick={handleUpdateIncDialogClose}>Cancel</Button>
-                            <Button color="success" type="submit">Update</Button>
-                        </DialogActions>
-                    </form>
-                </DialogContent>
-            </Dialog>
-        </Box>
+                        <Box display='flex' flexGrow={1} />
+
+                        <SearchBar>
+                            <SearchIconWrapper>
+                                <SearchIcon />
+                            </SearchIconWrapper>
+                            <StyledInputBase />
+                        </SearchBar>
+                    </Toolbar>
+                </AppBar>
+
+                <TabContext value={tabStatus}>
+                    <TabPanel value={tabStatus}>
+                        <Grid container spacing={2}>
+                            {/* Platform Tab */}
+                            <Grid
+                                item
+                                style={{ width: '100px' }}
+                                sx={{
+                                    ml: -5,
+                                    borderRight: 1,
+                                    borderColor: 'divider'
+                                }}
+                            >
+                                <Tabs
+                                    variant="fullWidth"
+                                    orientation="vertical"
+                                    TabIndicatorProps={{
+                                        style: { background: platformColor(tabPlatform) }
+                                    }}
+                                    value={tabPlatform}
+                                    onChange={handlePlatformChange}
+                                >
+                                    <Tab
+                                        value="All"
+                                        icon={
+                                            <StyledBadge
+                                                badgeContent={allCount}
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        color: 'black',
+                                                        backgroundColor: platformColor(tabPlatform === 'All' ? tabPlatform : '')
+                                                    }
+                                                }}
+                                            >
+                                                {tabPlatform === 'All'
+                                                    ? <CheckSquare color='#FFF176' size={35} />
+                                                    : <Square color='gray' size={35} />}
+                                            </StyledBadge>
+                                        }
+                                    />
+
+                                    <Tab
+                                        value="PC"
+                                        sx={{ mt: 1 }}
+                                        icon={
+                                            <StyledBadge
+                                                badgeContent={pcCount}
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        color: 'black',
+                                                        backgroundColor: platformColor(tabPlatform === 'PC' ? tabPlatform : '')
+                                                    }
+                                                }}
+                                            >
+                                                <PcDisplay color={platformColor(tabPlatform === 'PC' ? tabPlatform : '')} size={35} />
+                                            </StyledBadge>
+                                        }
+                                    />
+
+                                    <Tab
+                                        value="PlayStation"
+                                        sx={{ mt: 1 }}
+                                        icon={
+                                            <StyledBadge
+                                                badgeContent={psCount}
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        color: 'black',
+                                                        backgroundColor: platformColor(tabPlatform === 'PlayStation' ? tabPlatform : '')
+                                                    }
+                                                }}
+                                            >
+                                                <Playstation color={platformColor(tabPlatform === 'PlayStation' ? tabPlatform : '')} size={35} />
+                                            </StyledBadge>
+                                        }
+                                    />
+
+                                    <Tab
+                                        value="Nintendo Switch"
+                                        sx={{ mt: 1 }}
+                                        icon={
+                                            <StyledBadge
+                                                badgeContent={nsCount}
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        color: 'black',
+                                                        backgroundColor: platformColor(tabPlatform === 'Nintendo Switch' ? tabPlatform : '')
+                                                    }
+                                                }}
+                                            >
+                                                <NintendoSwitch color={platformColor(tabPlatform === 'Nintendo Switch' ? tabPlatform : '')} size={35} />
+                                            </StyledBadge>
+                                        }
+                                    />
+
+                                    <Tab
+                                        value="Xbox"
+                                        sx={{ mt: 1 }}
+                                        icon={
+                                            <StyledBadge
+                                                badgeContent={xboxCount}
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        color: 'black',
+                                                        backgroundColor: platformColor(tabPlatform === 'Xbox' ? tabPlatform : '')
+                                                    }
+                                                }}
+                                            >
+                                                <Xbox color={platformColor(tabPlatform === 'Xbox' ? tabPlatform : '')} size={35} />
+                                            </StyledBadge>
+                                        }
+                                    />
+
+                                    <Tab
+                                        value="Mobile"
+                                        sx={{ mt: 1 }}
+                                        icon={
+                                            <StyledBadge
+                                                sx={{
+                                                    "& .MuiBadge-badge": {
+                                                        color: 'black',
+                                                        backgroundColor: platformColor(tabPlatform === 'Mobile' ? tabPlatform : '')
+                                                    }
+                                                }}
+                                                badgeContent={mobileCount}
+                                            >
+                                                <Tablet color={platformColor(tabPlatform === 'Mobile' ? tabPlatform : '')} size={35} />
+                                            </StyledBadge>
+                                        }
+                                    />
+                                </Tabs>
+                            </Grid>
+
+                            <Grid
+                                item
+                                xs={true}
+                                justifyContent='center'
+                                alignItems='center'
+                            >
+                                <Grid container spacing={3}>
+                                    {games?.map((g, i) => (
+                                        <Grid item>
+                                            <Card
+                                                sx={{
+                                                    maxWidth: 250,
+                                                    maxHeight: 565,
+                                                }}
+                                                key={g.id}
+                                            >
+                                                <CardMedia
+                                                    component="img"
+                                                    height="250"
+                                                    image={"/assets/images/games/" + g.id + ".webp"}
+                                                />
+                                                <CardContent>
+                                                    <Tooltip title="">
+                                                        <Typography
+                                                            variant="subtitle1"
+                                                            align="center"
+                                                            color="text.info"
+                                                            sx={{ height: 30 }}
+                                                        >
+                                                            {g.title}
+                                                        </Typography>
+                                                    </Tooltip>
+                                                </CardContent>
+
+                                                <CardActions disableSpacing>
+                                                    <Tooltip title="Property">
+                                                        <IconButton onClick={() => handleUpdateGameDialogOpen(g.id)}>
+                                                            <TuneIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+
+                                                    {stopwatch?.target_id == g.id ?
+                                                        <Tooltip sx={{ ml: -1.5 }} title="Stop">
+                                                            <IconButton onClick={() => handleStopStopwatch()}>
+                                                                <AlarmOffIcon color="warning" />
+                                                            </IconButton>
+                                                        </Tooltip>
+                                                        :
+                                                        <Tooltip sx={{ ml: -1.5 }} title="Start">
+                                                            <IconButton onClick={() => handleStartGaming(g.id)}>
+                                                                <PlayCircleOutlineIcon color="success" />
+                                                            </IconButton>
+                                                        </Tooltip>}
+                                                </CardActions>
+
+                                                <CardContent sx={{ mt: -4 }}>
+                                                    <Box
+                                                        sx={{
+                                                            mx: "auto",
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            alignItems: 'center',
+                                                            '& > *': { m: 1 },
+                                                        }}
+                                                    >
+                                                        <TextField
+                                                            fullWidth
+                                                            size="small"
+                                                            sx={{ pt: 0.5 }}
+                                                            inputProps={{
+                                                                style: { textAlign: 'right' },
+                                                                readOnly: true,
+                                                            }}
+                                                            value={rating(g.rating)}
+                                                            InputProps={{
+                                                                startAdornment: (
+                                                                    <InputAdornment position="start">
+                                                                        {g.platform === 'Mobile' ? <Tablet /> : <></>}
+                                                                        {g.platform === 'Nintendo Switch' ? <NintendoSwitch /> : <></>}
+                                                                        {g.platform === 'PC' ? <PcDisplay /> : <></>}
+                                                                        {g.platform === 'PlayStation' ? <Playstation /> : <></>}
+                                                                        {g.platform === 'Xbox' ? <Xbox /> : <></>}
+                                                                    </InputAdornment>
+                                                                )
+                                                            }}
+                                                        />
+
+                                                        <TextField
+                                                            fullWidth
+                                                            size="small"
+                                                            sx={{ pt: 0.5 }}
+                                                            inputProps={{
+                                                                style: { textAlign: 'right' },
+                                                                readOnly: true,
+                                                            }}
+                                                            value={g.developer}
+                                                            InputProps={{
+                                                                startAdornment: (
+                                                                    <InputAdornment position="start">
+                                                                        <Code />
+                                                                    </InputAdornment>
+                                                                )
+                                                            }}
+                                                        />
+
+                                                        <TextField
+                                                            fullWidth
+                                                            size="small"
+                                                            sx={{ pt: 0.5 }}
+                                                            inputProps={{ style: { textAlign: 'right' }, readOnly: true }}
+                                                            value={g.publisher}
+                                                            InputProps={{
+                                                                startAdornment: (
+                                                                    <InputAdornment position="start"><CodeSlash /></InputAdornment>
+                                                                )
+                                                            }}
+                                                        />
+
+                                                        <TextField
+                                                            fullWidth
+                                                            size="small"
+                                                            sx={{ pt: 0.5 }}
+                                                            inputProps={{ style: { textAlign: 'right' }, readOnly: true }}
+                                                            value={hourOfDuration(g.total_time)}
+                                                            InputProps={{
+                                                                startAdornment: (
+                                                                    <InputAdornment position="start">
+                                                                        {g.status === 'Played' ? <BatteryFull /> : <></>}
+                                                                        {g.status === 'Playing' ? <BatteryCharging /> : <></>}
+                                                                        {g.status === 'ToPlay' ? <Battery /> : <></>}
+                                                                    </InputAdornment>
+                                                                ),
+                                                                endAdornment: (
+                                                                    <InputAdornment position="end">Hour(s)</InputAdornment>
+                                                                )
+                                                            }}
+                                                        />
+
+                                                        <Box sx={{ width: '100%' }}>
+                                                            <Progressing value={percentage(g.total_time, g.how_long_to_beat)} />
+                                                        </Box>
+                                                    </Box>
+                                                </CardContent>
+                                            </Card>
+                                        </Grid>
+                                    ))}
+                                </Grid>
+
+                                <Box
+                                    sx={{ width: '100%', pt: 3, pb: 3 }}
+                                    display="flex"
+                                    justifyContent="center"
+                                    alignItems="center"
+                                >
+                                    {totalPages > 1 ?
+                                        <Pagination
+                                            count={totalPages}
+                                            page={page}
+                                            onChange={handlePageChange}
+                                            variant="outlined"
+                                            color="secondary"
+                                        />
+                                        : <></>}
+                                </Box>
+                            </Grid>
+                        </Grid>
+
+
+                    </TabPanel>
+
+                </TabContext>
+
+                {/* Start Game Snackbar */}
+                <Snackbar open={successAlertOpen} autoHideDuration={3000} onClose={handleSuccessAlertClose}>
+                    <Alert severity="success" onClose={handleSuccessAlertClose} sx={{ width: '100%' }}>Started!</Alert>
+                </Snackbar>
+                <Snackbar open={warningAlertOpen} autoHideDuration={3000} onClose={handleWarningAlertClose}>
+                    <Alert severity="warning" onClose={handleWarningAlertClose} sx={{ width: '100%' }}>Closed!</Alert>
+                </Snackbar>
+                <Snackbar open={errorAlertOpen} autoHideDuration={3000} onClose={handleErrorAlertClose}>
+                    <Alert severity="error" onClose={handleErrorAlertClose} sx={{ width: '100%' }}>Failed!</Alert>
+                </Snackbar>
+
+                {/* Update Game Dialog */}
+                <Dialog
+                    open={openUpdateGameDialog}
+                    onClose={handleUpdateGameDialogClose}
+                >
+                    <DialogTitle align="center">
+                        Update Game
+                    </DialogTitle>
+                    <DialogContent>
+                        <form method="post" encType="multipart/form-data" action="/api/game/update">
+                            <FormControl fullWidth sx={{ mt: 1 }}>
+                                <TextField
+                                    name="id"
+                                    label="Id"
+                                    defaultValue={updateGame.game.id}
+                                    inputProps={{
+                                        readOnly: true
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth sx={{ mt: 2 }}>
+                                <TextField
+                                    name="title"
+                                    label="Title"
+                                    defaultValue={updateGame.game.title}
+                                >
+                                </TextField>
+                            </FormControl>
+
+                            <Grid container>
+                                <Grid item sx={{ width: '48%' }}>
+                                    <FormControl fullWidth sx={{ mt: 2 }}>
+                                        <InputLabel htmlFor="developer">Developer</InputLabel>
+                                        <Select
+                                            name="developer_id"
+                                            label="Developer"
+                                            defaultValue={updateGame.game.developer_id}
+                                        >
+                                            {updateGame.developers?.map((dev: any, index) => {
+                                                return (
+                                                    <MenuItem key={index} value={dev.id}>{dev.name}</MenuItem>
+                                                )
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item sx={{ width: '4%' }} />
+
+                                <Grid item sx={{ width: '48%' }}>
+                                    <FormControl fullWidth sx={{ mt: 2 }}>
+                                        <InputLabel htmlFor="publisher">Publisher</InputLabel>
+                                        <Select
+                                            name="publisher_id"
+                                            label="Publisher"
+                                            defaultValue={updateGame.game.publisher_id}
+                                        >
+                                            {updateGame.publishers?.map((pub: any, index) => {
+                                                return (
+                                                    <MenuItem key={index} value={pub.id}>{pub.name}</MenuItem>
+                                                )
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container>
+                                <Grid item sx={{ width: '48%' }}>
+                                    <FormControl
+                                        fullWidth
+                                        sx={{ mt: 2 }}
+                                    >
+                                        <InputLabel htmlFor="Status">Status</InputLabel>
+                                        <Select
+                                            name="status"
+                                            label="Status"
+                                            defaultValue={updateGame.game.status}
+                                        >
+                                            <MenuItem key="Played" value="Played">Played</MenuItem>
+                                            <MenuItem key="Playing" value="Playing">Playing</MenuItem>
+                                            <MenuItem key="ToPlay" value="ToPlay">ToPlay</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item sx={{ width: '4%' }} />
+
+                                <Grid item sx={{ width: '48%' }}>
+                                    <FormControl
+                                        fullWidth
+                                        sx={{ mt: 2 }}
+                                    >
+                                        <InputLabel htmlFor="Genre">Genre</InputLabel>
+                                        <Select
+                                            name="genre"
+                                            label="Genre"
+                                            defaultValue={updateGame.game.genre}
+                                        >
+                                            {updateGame.genres?.map((genre: any, index) => {
+                                                return (
+                                                    <MenuItem key={index} value={genre}>{genre}</MenuItem>
+                                                )
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container>
+                                <Grid item sx={{ width: '48%' }}>
+                                    <FormControl
+                                        fullWidth
+                                        sx={{ mt: 2 }}
+                                    >
+                                        <InputLabel htmlFor="Platform">Platform</InputLabel>
+                                        <Select
+                                            name="platform"
+                                            label="Platform"
+                                            defaultValue={updateGame.game.platform}
+                                        >
+                                            {updateGame.platforms?.map((platform: any, index) => {
+                                                return (
+                                                    <MenuItem key={index} value={platform}>{platform}</MenuItem>
+                                                )
+                                            })}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item sx={{ width: '4%' }}></Grid>
+                                <Grid item sx={{ width: '48%' }}>
+                                    <FormControl fullWidth sx={{ mt: 2 }}>
+                                        <InputLabel htmlFor="Rating">Rating</InputLabel>
+                                        <Select
+                                            name="rating"
+                                            label="Rating"
+                                            defaultValue={updateGame.game.rating}
+                                        >
+                                            <MenuItem key="10" value="10">Perfect</MenuItem>
+                                            <MenuItem key="9" value="9">Excellent</MenuItem>
+                                            <MenuItem key="8" value="8">Fantastic</MenuItem>
+                                            <MenuItem key="7" value="7">Great</MenuItem>
+                                            <MenuItem key="6" value="6">Good</MenuItem>
+                                            <MenuItem key="5" value="5">Fine</MenuItem>
+                                            <MenuItem key="4" value="4">Not Satisfied</MenuItem>
+                                            <MenuItem key="3" value="3">Boring</MenuItem>
+                                            <MenuItem key="2" value="2">Bad</MenuItem>
+                                            <MenuItem key="1" value="1">Trash</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container sx={{ mt: 2 }}>
+                                <Grid item sx={{ width: '30%' }}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            name="played_hour"
+                                            type="number"
+                                            label="Played Hour"
+                                            defaultValue={updateGame.played_hour}
+                                        >
+                                        </TextField>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item sx={{ width: '1%' }}></Grid>
+                                <Grid item sx={{ width: '17%' }}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            name="played_min"
+                                            type="number"
+                                            label="Min"
+                                            defaultValue={updateGame.played_min}
+                                        >
+                                        </TextField>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item sx={{ width: '4%' }}></Grid>
+
+                                <Grid item sx={{ width: '30%' }}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            name="hltb_hour"
+                                            type="number"
+                                            label="How Long To Beat Hour"
+                                            defaultValue={updateGame.hltb_hour}
+                                        >
+                                        </TextField>
+                                    </FormControl>
+                                </Grid>
+
+                                <Grid item sx={{ width: '1%' }}></Grid>
+
+                                <Grid item sx={{ width: '17%' }}>
+                                    <FormControl fullWidth>
+                                        <TextField
+                                            name="hltb_min"
+                                            type="number"
+                                            label="Min"
+                                            defaultValue={updateGame.hltb_min}
+                                        >
+                                        </TextField>
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+
+                            <Grid container sx={{ mt: 1 }} justifyContent="flex-end">
+                                <Grid item xs={12}>
+                                    <FormControl >
+                                        <input type="file" id="cover" name="cover" />
+                                    </FormControl>
+                                </Grid>
+                            </Grid>
+
+                            <DialogActions style={{ justifyContent: "space-between" }} sx={{ mt: 1, mb: -1, ml: -1, mr: -1 }}>
+                                <Button color="error" onClick={e => handleDeleteGame(updateGame.game.id.toString())}>Delete</Button>
+                                <Box>
+                                    <Button color="secondary" onClick={handleUpdateGameDialogClose}>Cancel</Button>
+                                    <Button color="success" type="submit">Update</Button>
+                                </Box>
+                            </DialogActions>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+
+
+                {/* Search Inc Dialog */}
+                <Dialog
+                    open={openSearchIncDialog}
+                    onClose={handleSearchIncDialogClose}
+                >
+                    <DialogTitle align="center">
+                        Search Inc
+                        <IconButton onClick={handleCreateIncDialogOpen}>
+                            <AddCircleOutlineIcon sx={{ color: "gray" }} />
+                        </IconButton>
+                    </DialogTitle>
+
+                    <Divider />
+
+                    <DialogContent>
+                        <form method="post" action="/api/inc/search">
+                            <Paper
+                                component="form"
+                                sx={{ display: 'flex', alignItems: 'center' }}
+                            >
+                                <InputBase
+                                    sx={{ ml: 2, flex: 1 }}
+                                    placeholder="Inc name"
+                                    name="keyword"
+                                    onChange={e => setSearchIncKeyword(e.target.value)}
+                                />
+
+                                <IconButton
+                                    type="button"
+                                    color="success"
+                                    sx={{ p: '10px' }}
+                                    aria-label="search"
+                                    onClick={() => searchInc(searchIncKeyword)}
+                                >
+                                    <SearchIcon />
+                                </IconButton>
+                            </Paper>
+
+                            <List sx={{ p: '2px 4px' }}>
+                                {searchedIncResult.map((inc, index) => (
+                                    <>
+                                        <ListItem
+                                            key={inc.id}
+                                            disableGutters
+                                            secondaryAction={
+                                                <IconButton
+                                                    edge="end"
+                                                    aria-label="delete"
+                                                    onClick={() => handleToUpdateInc(inc.id, inc.name, inc.is_dev, inc.is_pub)}
+                                                >
+                                                    <EditIcon />
+                                                </IconButton>
+                                            }
+                                        >
+                                            <ListItemText primary={inc.name} />
+                                        </ListItem>
+                                        {index !== searchedIncResult.length - 1 ? <Divider /> : <></>}
+                                    </>
+                                ))}
+                            </List>
+                            <Divider />
+                            <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
+                                <Button color="secondary" onClick={handleSearchIncDialogClose}>Close</Button>
+                            </DialogActions>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+
+
+                {/* Create Inc Dialog */}
+                <Dialog
+                    open={openCreateIncDialog}
+                    onClose={handleCreateIncDialogClose}
+                >
+                    <DialogTitle align="center">Create Inc</DialogTitle>
+                    <Divider />
+                    <DialogContent>
+                        <form method="post" action="/api/inc/create">
+                            <FormControl fullWidth sx={{ mt: 1, minWidth: 250 }}>
+                                <TextField name="name" label="Name" required>
+                                </TextField>
+                            </FormControl>
+
+                            <FormControl fullWidth sx={{ mt: 1 }} component="fieldset" variant="standard">
+                                <FormGroup>
+                                    <FormControlLabel control={<Switch value="1" name="is_developer" />} label="Developer" />
+                                    <FormControlLabel control={<Switch value="1" name="is_publisher" />} label="Publisher" />
+                                </FormGroup>
+                            </FormControl>
+
+                            <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
+                                <Button color="secondary" onClick={handleCreateIncDialogClose}>Cancel</Button>
+                                <Button color="success" type="submit">Create</Button>
+                            </DialogActions>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+
+
+                {/* Update Inc Dialog */}
+                <Dialog
+                    open={openUpdateIncDialog}
+                    onClose={handleUpdateIncDialogClose}
+                >
+                    <DialogTitle align="center">Update Inc</DialogTitle>
+                    <Divider />
+                    <DialogContent>
+                        <form method="post" action="/api/inc/update">
+                            <FormControl fullWidth sx={{ mt: 1, minWidth: 250 }}>
+                                {/* <input type='hidden' name="id" value="" { ...props } /> */}
+                                <TextField
+                                    name="id"
+                                    label="ID"
+                                    defaultValue={updatingInc?.id}
+                                    inputProps={{
+                                        readOnly: true
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl fullWidth sx={{ mt: 1, minWidth: 250 }}>
+                                <TextField
+                                    name="name"
+                                    label="Name"
+                                    defaultValue={updatingInc?.name}
+                                    required></TextField>
+                            </FormControl>
+
+                            <FormControl fullWidth sx={{ mt: 1 }} component="fieldset" variant="standard">
+                                <FormGroup>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch value="1" name="is_dev" defaultChecked={updatingInc?.is_dev} />
+                                        }
+                                        label="Developer" />
+
+                                    <FormControlLabel
+                                        control={
+                                            <Switch value="1" name="is_pub" defaultChecked={updatingInc?.is_pub} />
+                                        }
+                                        label="Publisher" />
+                                </FormGroup>
+                            </FormControl>
+
+                            <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
+                                <Button color="secondary" onClick={handleUpdateIncDialogClose}>Cancel</Button>
+                                <Button color="success" type="submit">Update</Button>
+                            </DialogActions>
+                        </form>
+                    </DialogContent>
+                </Dialog>
+
+            </Box>
+        </Fragment>
+
     )
 }
 

@@ -68,6 +68,7 @@ import { GameData } from "../../interfaces"
 import { BookData } from "../../interfaces"
 import { ProjectData } from "../../interfaces"
 import { formatDuration, formatTime } from "../../utils"
+import { Create } from "@mui/icons-material"
 
 export default function Act() {
     // [State]
@@ -115,7 +116,7 @@ export default function Act() {
 
     const [dialogTargetId, setDialogTargetId] = useState("")
     const [dialogTargetValue, setDialogTargetValue] = useState("")
-    
+
     const handleDialogTargetIdChange = (event: SelectChangeEvent<unknown>) => {
         const id = event.target.value as string
         setDialogTargetId(id)
@@ -249,12 +250,12 @@ export default function Act() {
 
     function fetchActs() {
         fetch(`/api/act/query?date=${dayjs(date).format('YYYYMMDD')}&type=${tabType}&duration=${tabDuration}`)
-        .then(resp => resp.json())
-        .then(data => {
-            setActs(data['acts'])
-            setActSummary(data['summary'])
-            setStopwatching(data['stopwatching'])
-        })
+            .then(resp => resp.json())
+            .then(data => {
+                setActs(data['acts'])
+                setActSummary(data['summary'])
+                setStopwatching(data['stopwatching'])
+            })
     }
 
     function reset() {
@@ -529,7 +530,7 @@ export default function Act() {
                                                                     style={{ verticalAlign: 'middle' }}
                                                                     color={LightColorByType(act.type)}
                                                                 >
-                                                                    { formatDuration(act.duration) }
+                                                                    {formatDuration(act.duration)}
                                                                 </Typography>
                                                             </TableCell>
 
@@ -636,7 +637,7 @@ export default function Act() {
 
                                                             <TableCell>
                                                                 <Typography style={{ verticalAlign: 'middle' }} color={LightColorByType(act.type)}>
-                                                                    { formatDuration(act.duration) }
+                                                                    {formatDuration(act.duration)}
                                                                 </Typography>
                                                             </TableCell>
 
@@ -744,7 +745,7 @@ export default function Act() {
 
                                                             <TableCell>
                                                                 <Typography style={{ verticalAlign: 'middle' }} color={LightColorByType(act.type)}>
-                                                                    { formatDuration(act.duration) }
+                                                                    {formatDuration(act.duration)}
                                                                 </Typography>
                                                             </TableCell>
 
@@ -851,7 +852,7 @@ export default function Act() {
 
                                                             <TableCell>
                                                                 <Typography style={{ verticalAlign: 'middle' }} color={LightColorByType(act.type)}>
-                                                                    { formatDuration(act.duration) }
+                                                                    {formatDuration(act.duration)}
                                                                 </Typography>
                                                             </TableCell>
 
@@ -931,7 +932,7 @@ export default function Act() {
                 </Grid>
             </TabContext>
 
-            {/* Pick a date dialog */}
+            {/* [Pick Date Dialog] */}
             <Dialog
                 open={openCalendar}
                 onClose={handleCalendarClose}
@@ -960,36 +961,7 @@ export default function Act() {
                 </DialogContent>
             </Dialog>
 
-            {/* Delete Act Dialog */}
-            <Dialog open={openDeleteAct} onClose={handleDeleteActClose}>
-                <DialogTitle align="center">Delete Activity</DialogTitle>
-                <DialogContent>
-                    <form style={{ width: 300 }} onSubmit={handleDeleteActSubmit}>
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <TextField label="ID" value={toDelAct?.id} disabled></TextField>
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <TextField label="Type" value={toDelAct?.type} disabled></TextField>
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <TextField label="Duration" value={toDelAct?.duration} disabled></TextField>
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <TextField label="Title" value={toDelAct?.title} disabled></TextField>
-                        </FormControl>
-
-                        <DialogActions sx={{ mt: 1, mb: -1, mr: -2 }}>
-                            <Button color="secondary" onClick={handleDeleteActClose}>Cancel</Button>
-                            <Button type="submit" color="error">Delete</Button>
-                        </DialogActions>
-                    </form>
-                </DialogContent>
-            </Dialog>
-
-            {/* Create Act Dialog */}
+            {/* [Create Act Dialog] */}
             <Dialog
                 maxWidth="sm"
                 open={openCreateActDialog}
@@ -1085,7 +1057,36 @@ export default function Act() {
                 </DialogContent>
             </Dialog>
 
-            {/* Stopwatch Dialog */}
+            {/* [Delete Act Dialog] */}
+            <Dialog open={openDeleteAct} onClose={handleDeleteActClose}>
+                <DialogTitle align="center">Delete Activity</DialogTitle>
+                <DialogContent>
+                    <form style={{ width: 300 }} onSubmit={handleDeleteActSubmit}>
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <TextField label="ID" value={toDelAct?.id} disabled></TextField>
+                        </FormControl>
+
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <TextField label="Type" value={toDelAct?.type} disabled></TextField>
+                        </FormControl>
+
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <TextField label="Duration" value={toDelAct?.duration} disabled></TextField>
+                        </FormControl>
+
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <TextField label="Title" value={toDelAct?.title} disabled></TextField>
+                        </FormControl>
+
+                        <DialogActions sx={{ mt: 1, mb: -1, mr: -2 }}>
+                            <Button color="secondary" onClick={handleDeleteActClose}>Cancel</Button>
+                            <Button type="submit" color="error">Delete</Button>
+                        </DialogActions>
+                    </form>
+                </DialogContent>
+            </Dialog>
+
+            {/* [Stopwatch Dialog] */}
             <Dialog
                 open={openStopwatch}
                 onClose={handleStopwatchClose}
@@ -1098,92 +1099,92 @@ export default function Act() {
             >
                 <DialogTitle align="center">Stopwatch</DialogTitle>
                 <DialogContent>
-                {
-                    stopwatching === null ?
-                        <form method="post" action="/api/act/stopwatch/start">
-                            <FormControl fullWidth sx={{ mt: 1 }}>
-                                <InputLabel>Type</InputLabel>
-                                <Select
-                                    required
-                                    name="type"
-                                    label="Type"
-                                    value={dialogFormType}
-                                    onChange={(e) => setDialogFormType(e.target.value)}
-                                >
-                                    <MenuItem value='Drawing'>
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <DrawingIcon />
-                                            <div>&nbsp;Drawing</div>
-                                        </div>
-                                    </MenuItem>
-                                    <MenuItem value='Gaming'>
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <GamingIcon />
-                                            <div>&nbsp;Gaming</div>
-                                        </div>
-                                    </MenuItem>
-                                    <MenuItem value='Programming'>
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <ProgrammingIcon />
-                                            <div>&nbsp;Programming</div>
-                                        </div>
-                                    </MenuItem>
-                                    <MenuItem value='Reading'>
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <ReadingIcon />
-                                            <div>&nbsp;Reading</div>
-                                        </div>
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            {TargetTitles(dialogFormType, false)}
-
-                            <DialogActions sx={{ mt: 1, mb: -1, mr: -2 }}>
-                                <Button color="secondary" onClick={handleStopwatchClose}>Cancel</Button>
-                                <Button color="success" type="submit">Start</Button>
-                            </DialogActions>
-                        </form>
-                        :
-                        <form method='post' action='/api/act/stopwatch/stop'>
-                            <FormControl fullWidth sx={{ mt: 1 }}>
-                                <TextField label="Started At" value={dayjs(stopwatching?.start_time).format('YYYY/MM/DD HH:mm:ss')} disabled></TextField>
-                            </FormControl>
-
-                            <FormControl fullWidth sx={{ mt: 2 }}>
-                                <TextField label="Type" value={stopwatching?.type} disabled></TextField>
-                            </FormControl>
-
-                            <FormControl fullWidth sx={{ mt: 2 }}>
-                                <TextField label="Title" value={stopwatching?.target_title} disabled></TextField>
-                            </FormControl>
-
-                            {
-                                stopwatching?.type === 'Reading' ?
-                                <FormControl fullWidth sx={{ mt: 2 }}>
-                                    <TextField
-                                        label="Current Page"
-                                        name='cur_page'
-                                        type='number'
-                                        defaultValue={curPageByBookId(stopwatching?.target_id)}
-                                        // value={curPage}
-                                        // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                        //     setCurPage(event.target.value)
-                                        // }}
-                                        required />
+                    {
+                        stopwatching === null ?
+                            <form method="post" action="/api/act/stopwatch/start">
+                                <FormControl fullWidth sx={{ mt: 1 }}>
+                                    <InputLabel>Type</InputLabel>
+                                    <Select
+                                        required
+                                        name="type"
+                                        label="Type"
+                                        value={dialogFormType}
+                                        onChange={(e) => setDialogFormType(e.target.value)}
+                                    >
+                                        <MenuItem value='Drawing'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <DrawingIcon />
+                                                <div>&nbsp;Drawing</div>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuItem value='Gaming'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <GamingIcon />
+                                                <div>&nbsp;Gaming</div>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuItem value='Programming'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <ProgrammingIcon />
+                                                <div>&nbsp;Programming</div>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuItem value='Reading'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <ReadingIcon />
+                                                <div>&nbsp;Reading</div>
+                                            </div>
+                                        </MenuItem>
+                                    </Select>
                                 </FormControl>
-                                : <></>
-                            }
 
-                            <DialogActions style={{ justifyContent: "space-between" }} sx={{ mt: 1, mb: -1, ml: -1, mr: -1 }}>
-                                <Button color="error" onClick={handleTerminateStopwatch}>Terminate</Button>
-                                <Box>
+                                {TargetTitles(dialogFormType, false)}
+
+                                <DialogActions sx={{ mt: 1, mb: -1, mr: -2 }}>
                                     <Button color="secondary" onClick={handleStopwatchClose}>Cancel</Button>
-                                    <Button type="submit" color="error">Stop</Button>
-                                </Box>
-                            </DialogActions>
-                        </form>
-                }
+                                    <Button color="success" type="submit">Start</Button>
+                                </DialogActions>
+                            </form>
+                            :
+                            <form method='post' action='/api/act/stopwatch/stop'>
+                                <FormControl fullWidth sx={{ mt: 1 }}>
+                                    <TextField label="Started At" value={dayjs(stopwatching?.start_time).format('YYYY/MM/DD HH:mm:ss')} disabled></TextField>
+                                </FormControl>
+
+                                <FormControl fullWidth sx={{ mt: 2 }}>
+                                    <TextField label="Type" value={stopwatching?.type} disabled></TextField>
+                                </FormControl>
+
+                                <FormControl fullWidth sx={{ mt: 2 }}>
+                                    <TextField label="Title" value={stopwatching?.target_title} disabled></TextField>
+                                </FormControl>
+
+                                {
+                                    stopwatching?.type === 'Reading' ?
+                                        <FormControl fullWidth sx={{ mt: 2 }}>
+                                            <TextField
+                                                label="Current Page"
+                                                name='cur_page'
+                                                type='number'
+                                                defaultValue={curPageByBookId(stopwatching?.target_id)}
+                                                // value={curPage}
+                                                // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                                                //     setCurPage(event.target.value)
+                                                // }}
+                                                required />
+                                        </FormControl>
+                                        : <></>
+                                }
+
+                                <DialogActions style={{ justifyContent: "space-between" }} sx={{ mt: 1, mb: -1, ml: -1, mr: -1 }}>
+                                    <Button color="error" onClick={handleTerminateStopwatch}>Terminate</Button>
+                                    <Box>
+                                        <Button color="secondary" onClick={handleStopwatchClose}>Cancel</Button>
+                                        <Button type="submit" color="error">Stop</Button>
+                                    </Box>
+                                </DialogActions>
+                            </form>
+                    }
                 </DialogContent>
             </Dialog>
         </Box>
@@ -1254,7 +1255,7 @@ export default function Act() {
                             name="targetId"
                             label="Game"
                             defaultValue={dialogTargetId}
-                            onChange={ handleDialogTargetIdChange }
+                            onChange={handleDialogTargetIdChange}
                         >
                             {gaming?.map((g: GameData, index) => {
                                 return (
@@ -1272,7 +1273,7 @@ export default function Act() {
                             name="targetId"
                             label="Project"
                             value={dialogTargetId}
-                            onChange={ handleDialogTargetIdChange }
+                            onChange={handleDialogTargetIdChange}
                         >
                             {programming?.map((proj: any, index) => {
                                 return (
@@ -1293,7 +1294,7 @@ export default function Act() {
                                         name="targetId"
                                         label="Book"
                                         value={dialogTargetId}
-                                        onChange={ handleDialogTargetIdChange }
+                                        onChange={handleDialogTargetIdChange}
                                     >
                                         {reading?.map((b: any, index) => {
                                             return (
@@ -1310,8 +1311,8 @@ export default function Act() {
                                         label='Page'
                                         name='cur_page'
                                         type='number'
-                                        value={ dialogTargetValue }
-                                        onChange={ handleDialogTargetValueChange }
+                                        value={dialogTargetValue}
+                                        onChange={handleDialogTargetValueChange}
                                     />
                                 </FormControl>
                             </Grid>
@@ -1325,7 +1326,7 @@ export default function Act() {
                                 name="targetId"
                                 label="Book"
                                 value={dialogTargetId}
-                                onChange={ handleDialogTargetIdChange }
+                                onChange={handleDialogTargetIdChange}
                             >
                                 {reading?.map((b: any, index) => {
                                     return (
