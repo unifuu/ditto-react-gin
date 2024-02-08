@@ -24,7 +24,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { BookData } from '../../interfaces'
 import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
 import EditIcon from '@mui/icons-material/Edit'
-import { checkIsInSchedule, formatDuration } from '../../utils'
+import { checkIsInSchedule, formatDuration, percentageOfProgress } from '../../utils'
 import { TodoBadge } from '../Common/Badges'
 import { DoingBadge } from '../Common/Badges'
 import { DoneBadge } from '../Common/Badges'
@@ -151,21 +151,21 @@ export default function Book() {
                                     <Table size="small">
                                         <TableHead>
                                             <TableRow>
-                                                <TableCell colSpan={4}>Date</TableCell>
-                                                <TableCell colSpan={2} align="left">Start</TableCell>
-                                                <TableCell colSpan={2} align="left">End</TableCell>
-                                                <TableCell colSpan={2} align="left">Page</TableCell>
+                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Date</TableCell>
+                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Start</TableCell>
+                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>End</TableCell>
+                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Page</TableCell>
+                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Progress</TableCell>
                                             </TableRow>
                                         </TableHead>
                                         <TableBody>
                                             {row.logs.map((log) => (
                                                 <TableRow key={log.date}>
-                                                    <TableCell component="th" scope="row">
-                                                        {log.date}
-                                                    </TableCell>
-                                                    <TableCell align="right">{log.start}</TableCell>
-                                                    <TableCell align="right">{log.end}</TableCell>
-                                                    <TableCell align="right">{log.cur_page}</TableCell>
+                                                    <TableCell colSpan={2} align="left">{log.date}</TableCell>
+                                                    <TableCell colSpan={2} align="left">{log.start}</TableCell>
+                                                    <TableCell colSpan={2} align="left">{log.end}</TableCell>
+                                                    <TableCell colSpan={2} align="left">{log.cur_page}</TableCell>
+                                                    <TableCell colSpan={2} align="left">{ percentageOfProgress(log.cur_page, row.total_page) }</TableCell>
                                                 </TableRow>
                                             ))}
                                         </TableBody>

@@ -84,3 +84,13 @@ export function checkIsInSchedule(cur: number, total: number) {
     const totalDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
     return cur/total > day/totalDays
 }
+
+export function percentageOfProgress(cur: number, total: number): string {
+    if (total === 0) {
+        return '0%'
+    }
+    
+    const percentage = (cur / total) * 100
+    const formattedPercentage = percentage % 1 === 0 ? percentage.toFixed(0) : percentage.toFixed(1)
+    return formattedPercentage + '%'
+}
