@@ -72,3 +72,15 @@ export function formatTime(inputTime: string): string {
     const formattedTime = `${hours}:${minutes}`
     return formattedTime
 }
+
+/**
+ * Check the progress is in schedule or not in this month
+ * @param cur 
+ * @param total 
+ */
+export function checkIsInSchedule(cur: number, total: number) {
+    const currentDate = new Date()
+    const day = currentDate.getDate()
+    const totalDays = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate()
+    return cur/total > day/totalDays
+}

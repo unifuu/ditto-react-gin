@@ -24,7 +24,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { BookData } from '../../interfaces'
 import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
 import EditIcon from '@mui/icons-material/Edit'
-import { formatDuration } from '../../utils'
+import { checkIsInSchedule, formatDuration } from '../../utils'
 import { TodoBadge } from '../Common/Badges'
 import { DoingBadge } from '../Common/Badges'
 import { DoneBadge } from '../Common/Badges'
@@ -138,7 +138,9 @@ export default function Book() {
                     <TableCell align="right">{row.genre}</TableCell>
                     <TableCell align="right">{row.cur_page}</TableCell>
                     <TableCell align="right">{row.total_page}</TableCell>
-                    <TableCell align="right">{row.page_percentage}</TableCell>
+                    <TableCell align="right" style={{ color: checkIsInSchedule(row.cur_page, row.total_page) ? 'green' : 'red' }}>
+                        {row.page_percentage}
+                    </TableCell>
                     <TableCell align="right">{formatDuration(row.total_time)}</TableCell>
                 </TableRow>
                 {row.logs !== null &&
