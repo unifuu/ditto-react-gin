@@ -76,7 +76,7 @@ docker image prune
 sudo docker cp ???:/assets/images/games ~/assets/2022????
 ```
 
-### [MongoDB] Backup databse
+### [MongoDB] Backup database
 
 ``` cmd
 # AWS EC2: Docker → Ubuntu

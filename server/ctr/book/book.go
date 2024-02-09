@@ -21,12 +21,11 @@ const (
 func API(e *gin.Engine) {
 	anon := e.Group("/api/book")
 	{
-		anon.GET("/p/:page", query)
+		anon.GET("/", query)
 	}
 
 	auth := e.Group("/api/book").Use(mw.Auth)
 	{
-		auth.Any("/", query)
 		auth.GET("/badge", badge)
 		auth.Any("/create", create)
 		auth.Any("/delete", delete)
