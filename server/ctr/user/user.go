@@ -23,13 +23,14 @@ func login(c *gin.Context) {
 	auth, err := h.UserService.Login(u.Username, u.Password)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"msg":        "Login failed.",
+			"msg":        "NG",
 			"auth_token": "",
 		})
 		return
 	} else {
 		token := mw.SetAuth(c, auth.ID.Hex())
 		c.JSON(http.StatusOK, gin.H{
+			"msg":        "OK",
 			"auth_token": token,
 		})
 	}
