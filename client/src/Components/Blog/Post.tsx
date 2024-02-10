@@ -222,7 +222,7 @@ export default function Post() {
                                 </TextField>
                             </FormControl>
 
-                            <DialogActions style={{ justifyContent: "space-between" }} sx={{ mb: -3, ml: -1, mr: -1 }}>
+                            <DialogActions style={{ justifyContent: "space-between" }} sx={{ mb: -1, ml: -1, mr: -1 }}>
                                 <Button color="error" onClick={e => handleDeletePost(post!!.id.toString())}>Delete</Button>
                                 <Box>
                                     <Button color="secondary" onClick={handleEditPostDialogClose}>Cancel</Button>
