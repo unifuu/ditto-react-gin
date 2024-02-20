@@ -4,7 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { Box, Checkbox } from '@mui/material'
+import { Box } from '@mui/material'
 import { Button } from '@mui/material'
 import { Container } from '@mui/material'
 import { Dialog } from '@mui/material'
@@ -14,20 +14,17 @@ import { DialogTitle } from '@mui/material'
 import { FormControl } from '@mui/material'
 import { Grid } from '@mui/material'
 import { IconButton } from '@mui/material'
-import { Paper } from '@mui/material'
 import { TextField } from '@mui/material'
 import useToken from '../../useToken'
 import ModeIcon from '@mui/icons-material/Mode'
 import dayjs from 'dayjs'
 import PostHeader from './PostHeader'
-import PostFooter from './PostFooter'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { PostData } from './interfaces'
 import TagSelects from './TagSelects'
 import Loading from '../Common/Loading'
 import styles from './styles.module.css'
 import PinIcon from '@mui/icons-material/PushPin'
-import Footer from './Footer'
 
 export default function Post() {
     const navigate = useNavigate()
@@ -87,19 +84,6 @@ export default function Post() {
             })
     }
 
-    interface CheckboxRendererProps {
-        checked: boolean
-        children: React.ReactNode
-    }
-    const CheckboxRenderer: React.FC<CheckboxRendererProps> = ({ checked, children }) => (
-        <span style={{ textDecoration: checked ? 'line-through' : 'none' }}>
-            {children}
-        </span>
-    )
-    const renderers = {
-        checkbox: CheckboxRenderer,
-    }
-
     if (!post) {
         return <Loading />
     } else {
@@ -116,32 +100,28 @@ export default function Post() {
                         }}
                     >
                         {dayjs(post!!.date).format('ddd MMM DD YYYY')}
-                        {
-                            token ?
-                                <>
-                                    <IconButton onClick={handleEditPostDialogOpen}>
-                                        <ModeIcon sx={{ fontSize: 15, color: "gray" }} />
-                                    </IconButton>
-                                    <IconButton sx={{ ml: -1.5 }} onClick={handlePinPost}>
-                                        {
-                                            post!!.is_pinned ?
-                                                <PinIcon sx={{ fontSize: 15, color: "#9575CD" }} /> :
-                                                <PinIcon sx={{ fontSize: 15, color: "gray" }} />
-                                        }
-                                    </IconButton>
-                                </> : <></>
-                        }
+                        {token && <>
+                            <IconButton onClick={handleEditPostDialogOpen}>
+                                <ModeIcon sx={{ fontSize: 15, color: "gray" }} />
+                            </IconButton>
+                            <IconButton sx={{ ml: -1.5 }} onClick={handlePinPost}>
+                                {post!!.is_pinned ?
+                                    <PinIcon sx={{ fontSize: 15, color: "#9575CD" }} /> :
+                                    <PinIcon sx={{ fontSize: 15, color: "gray" }} />
+                                }
+                            </IconButton>
+                        </>}
                     </Box>
                 </Grid>
 
                 {/* Content */}
                 <Box
-                    style={{ wordWrap: 'break-word' }}
+                    style={{ wordWrap: 'break-word',  }}
                     sx={{
                         mt: 1,
                         pb: 5,
-                        ml: matchScreen(4, 0),
-                        mr: matchScreen(4, 0),
+                        ml: matchScreen(4, 1),
+                        mr: matchScreen(4, 1),
                     }}
                 >
                     <ReactMarkdown
