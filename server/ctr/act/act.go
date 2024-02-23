@@ -206,38 +206,31 @@ func stop(c *gin.Context) {
 			TargetID: format.ToObjID(sw.TargetID),
 		})
 
-		switch c.Request.Method {
-		case "GET":
-			switch sw.Type {
+		switch sw.Type {
+		case act.GAMING:
+			g := h.GameService.ByID(sw.TargetID)
+			g.TotalTime += sw.Duration
+			h.GameService.Update(g)
 
+		case act.PROGRAMMING:
+			p := h.ProjService.ByID(sw.TargetID)
+			p.TotalTime += sw.Duration
+			h.ProjService.Update(p)
+
+		case act.READING:
+			b := h.BookService.ByID(sw.TargetID)
+			curPage, _ := strconv.Atoi(c.PostForm("cur_page"))
+			log := book.Log{
+				Date:        dt.Today(dt.YYYYMMDD),
+				Start:       dt.Time2Str(sw.StartTime, dt.HH_MM),
+				End:         dt.Time2Str(sw.EndTime, dt.HH_MM),
+				CurrentPage: curPage,
 			}
-		case "POST":
-			switch sw.Type {
-			case act.GAMING:
-				g := h.GameService.ByID(sw.TargetID)
-				g.TotalTime += sw.Duration
-				h.GameService.Update(g)
 
-			case act.PROGRAMMING:
-				p := h.ProjService.ByID(sw.TargetID)
-				p.TotalTime += sw.Duration
-				h.ProjService.Update(p)
-
-			case act.READING:
-				b := h.BookService.ByID(sw.TargetID)
-				curPage, _ := strconv.Atoi(c.PostForm("cur_page"))
-				log := book.Log{
-					Date:        dt.Today(dt.YYYYMMDD),
-					Start:       dt.Time2Str(sw.StartTime, dt.HH_MM),
-					End:         dt.Time2Str(sw.EndTime, dt.HH_MM),
-					CurrentPage: curPage,
-				}
-
-				b.Logs = append(b.Logs, log)
-				b.CurrentPage = curPage
-				b.TotalTime += sw.Duration
-				h.BookService.Update(b)
-			}
+			b.Logs = append(b.Logs, log)
+			b.CurrentPage = curPage
+			b.TotalTime += sw.Duration
+			h.BookService.Update(b)
 		}
 	}
 
