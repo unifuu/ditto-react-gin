@@ -640,7 +640,7 @@ export default function Game() {
                             <ToggleButton value="Playing">
                                 {DoingBadge(playingCnt)}
                             </ToggleButton>
-                            <ToggleButton value="ToRead">
+                            <ToggleButton value="ToPlay">
                                 {TodoBadge(toPlayCnt)}
                             </ToggleButton>
                         </ToggleButtonGroup>
