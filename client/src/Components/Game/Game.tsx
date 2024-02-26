@@ -457,68 +457,6 @@ export default function Game() {
     }
     const handleClose = () => { setAnchorEl(null) }
 
-    // [Dialogs]
-    const CreateGameDialog = () => {
-        return (
-            <Dialog
-                open={openCreateGameDialog}
-                onClose={handleCreateGameDialogClose}
-            >
-                <DialogTitle align="center">Create Game</DialogTitle>
-                <DialogContent>
-                    <form method="post" action="/api/game/create">
-                        <FormControl fullWidth sx={{ mt: 1 }}>
-                            <TextField name="title" label="Title" required />
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <InputLabel htmlFor="developer">Developer</InputLabel>
-                            <Select name="developer_id" label="Developer" required>
-                                {createGame.developers?.map((dev: any, index) => {
-                                    return (<MenuItem key={index} value={dev.id}>{dev.name}</MenuItem>)
-                                })}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <InputLabel htmlFor="publisher">Publisher</InputLabel>
-                            <Select name="publisher_id" label="Publisher" required>
-                                {createGame.publishers?.map((pub: any, index) => {
-                                    return (<MenuItem key={index} value={pub.id}>{pub.name}</MenuItem>)
-                                })}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <InputLabel htmlFor="Genre">Genre</InputLabel>
-                            <Select name="genre" label="Genre" required>
-                                {createGame.genres?.map((genre: any, index) => {
-                                    return (<MenuItem key={index} value={genre}>{genre}</MenuItem>)
-                                })}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth sx={{ mt: 2 }}>
-                            <InputLabel htmlFor="Platform">Platform</InputLabel>
-                            <Select name="platform" label="Platform" required>
-                                {createGame.platforms?.map((platform: any, index) => {
-                                    return (
-                                        <MenuItem key={index} value={platform}>{platform}</MenuItem>
-                                    )
-                                })}
-                            </Select>
-                        </FormControl>
-
-                        <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
-                            <Button color="secondary" onClick={handleCreateGameDialogClose}>Cancel</Button>
-                            <Button color="success" type="submit">Create</Button>
-                        </DialogActions>
-                    </form>
-                </DialogContent>
-            </Dialog>
-        )
-    }
-
     return (
         <Fragment>
             <AppBar
@@ -1353,6 +1291,63 @@ export default function Game() {
                 </Dialog>
 
             </Box>
+
+            <Dialog
+                open={openCreateGameDialog}
+                onClose={handleCreateGameDialogClose}
+            >
+                <DialogTitle align="center">Create Game</DialogTitle>
+                <DialogContent>
+                    <form method="post" action="/api/game/create">
+                        <FormControl fullWidth sx={{ mt: 1 }}>
+                            <TextField name="title" label="Title" required />
+                        </FormControl>
+
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <InputLabel htmlFor="developer">Developer</InputLabel>
+                            <Select name="developer_id" label="Developer" required>
+                                {createGame.developers?.map((dev: any, index) => {
+                                    return (<MenuItem key={index} value={dev.id}>{dev.name}</MenuItem>)
+                                })}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <InputLabel htmlFor="publisher">Publisher</InputLabel>
+                            <Select name="publisher_id" label="Publisher" required>
+                                {createGame.publishers?.map((pub: any, index) => {
+                                    return (<MenuItem key={index} value={pub.id}>{pub.name}</MenuItem>)
+                                })}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <InputLabel htmlFor="Genre">Genre</InputLabel>
+                            <Select name="genre" label="Genre" required>
+                                {createGame.genres?.map((genre: any, index) => {
+                                    return (<MenuItem key={index} value={genre}>{genre}</MenuItem>)
+                                })}
+                            </Select>
+                        </FormControl>
+
+                        <FormControl fullWidth sx={{ mt: 2 }}>
+                            <InputLabel htmlFor="Platform">Platform</InputLabel>
+                            <Select name="platform" label="Platform" required>
+                                {createGame.platforms?.map((platform: any, index) => {
+                                    return (
+                                        <MenuItem key={index} value={platform}>{platform}</MenuItem>
+                                    )
+                                })}
+                            </Select>
+                        </FormControl>
+
+                        <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
+                            <Button color="secondary" onClick={handleCreateGameDialogClose}>Cancel</Button>
+                            <Button color="success" type="submit">Create</Button>
+                        </DialogActions>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </Fragment>
 
     )
