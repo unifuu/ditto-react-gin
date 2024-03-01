@@ -15,8 +15,11 @@ import (
 )
 
 const (
-	PC_EXPIRATION    = time.Duration(24 * 7 * time.Hour)
-	PHONE_EXPIRATION = time.Duration(24 * 31 * 3 * time.Hour)
+	// 3 months
+	REDIS_EXPIRATION = time.Duration(24 * 30 * 3 * time.Hour)
+
+	// 3 months
+	GIN_COOKIE_EXPIRATION = 1 * 60 * 60 * 24 * 30 * 3
 )
 
 // Set user authentication token to Redis
@@ -27,19 +30,11 @@ func SetAuth(c *gin.Context, userID string) string {
 	}
 	token := base64.URLEncoding.EncodeToString(b)
 
-	// Get client device information
-	useragent := c.Request.Header.Get("User-Agent")
-	var expiration time.Duration
-	if isMobile(useragent) {
-		expiration = PHONE_EXPIRATION
-	} else {
-		expiration = PC_EXPIRATION
-	}
-
-	if err := db_redis.Set(token, userID, expiration); err != nil {
+	if err := db_redis.Set(token, userID, REDIS_EXPIRATION); err != nil {
 		panic("Failed to set session key to Redis..." + err.Error())
 	}
-	c.SetCookie("auth_token", token, int(expiration), "/", "", false, false)
+
+	c.SetCookie("auth_token", token, GIN_COOKIE_EXPIRATION, "/", "", false, false)
 	return token
 }
 
