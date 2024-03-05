@@ -72,8 +72,10 @@ import { CheckSquare } from 'react-bootstrap-icons'
 import { Square } from 'react-bootstrap-icons'
 import { hourOfDuration, percentage } from '../../utils'
 import { DoingBadge, DoneBadge, TodoBadge } from '../Common/Badges'
+import useToken from '../../useToken'
 
 export default function Game() {
+    const { token, setToken } = useToken()
     const [stopwatch, setStopwatch] = useState<StopwatchData>()
 
     const pcScreen = useMediaQuery('(min-width:600px)')

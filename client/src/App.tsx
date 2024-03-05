@@ -17,18 +17,15 @@ export default function App() {
 
   if (!token) {
     return (
-      <>
-        <Routes>
-          <Route path="/" element={<Blog authed={false} />} />
-          <Route path="/act" element={<Blog authed={false} />} />
-          <Route path="/blog" element={<Blog authed={false} />} />
-          <Route path="/book" element={<Book />} />
-          <Route path="/fuu" element={<SignIn setToken={setToken} />} />
-          <Route path="/game" element={<Blog authed={false} />} />
-          <Route path="/post" element={<Post />} />
-          <Route path="/post/:postId" element={<Post />} />
-        </Routes>
-      </>
+      <Routes>
+        <Route path="/" element={<Blog authed={false} />} />
+        <Route path="/act" element={<Blog authed={false} />} />
+        <Route path="/blog" element={<Blog authed={false} />} />
+        <Route path="/fuu" element={<SignIn setToken={setToken} />} />
+        <Route path="/game" element={<Blog authed={false} />} />
+        <Route path="/post" element={<Post />} />
+        <Route path="/post/:postId" element={<Post />} />
+      </Routes>
     )
   } else {
     return (
@@ -41,7 +38,6 @@ export default function App() {
           <Route path="/" element={<Blog authed={true} />} />
           <Route path="/act" element={<Act />} />
           <Route path="/blog" element={<Blog authed={true} />} />
-          <Route path="/book" element={<Book />} />
           <Route path="/game" element={<Game />} />
           <Route path="/post" element={<Post />} />
           <Route path="/post/:postId" element={<Post />} />

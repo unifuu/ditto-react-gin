@@ -27,7 +27,7 @@ async function login(credentials: { username: string; password: string; }) {
     if (response.ok) {
       return response.json();
     } else {
-      alert("🤔")
+      alert("...")
       return null;
     }
   })
