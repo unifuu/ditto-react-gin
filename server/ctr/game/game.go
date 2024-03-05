@@ -20,13 +20,18 @@ const (
 )
 
 func API(e *gin.Engine) {
+	anon := e.Group("/api/blog")
+	{
+		anon.GET("/", index)
+	}
+
 	auth := e.Group("/api/game").Use(mw.Auth)
 	{
 		auth.Any("/create", create)
 		auth.Any("/delete", delete)
 		auth.Any("/update", update)
 		auth.POST("/update_status", updateStatus)
-		auth.GET("/", query)
+		auth.GET("/status", query)
 		auth.GET("/badges", badges)
 		auth.GET("/status/:status/:platform/:page", status)
 	}
@@ -107,6 +112,14 @@ func delete(c *gin.Context) {
 	root := path.Root()
 	path := root + "/../assets/img/games/" + file
 	os.Remove(path)
+}
+
+func index(c *gin.Context) {
+	status := game.PLAYING
+	data := gin.H{
+		"games": h.GameService.ByStatus(status),
+	}
+	c.JSON(http.StatusOK, data)
 }
 
 func query(c *gin.Context) {
