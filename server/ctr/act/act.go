@@ -4,13 +4,11 @@ import (
 	h "ditto/ctr"
 	mw "ditto/middleware"
 	"ditto/model/act"
-	"ditto/model/book"
 	"ditto/model/game"
 	"ditto/model/project"
 	dt "ditto/util/datetime"
 	"ditto/util/format"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -71,22 +69,6 @@ func create(c *gin.Context) {
 			p := h.ProjService.ByID(a.TargetID)
 			p.TotalTime += a.Duration
 			h.ProjService.Update(p)
-
-		case act.READING:
-			b := h.BookService.ByID(a.TargetID)
-
-			curPage, _ := strconv.Atoi(c.PostForm("cur_page"))
-			log := book.Log{
-				Date:        date,
-				Start:       dt.Time2Str(start, dt.HH_MM),
-				End:         dt.Time2Str(end, dt.HH_MM),
-				CurrentPage: curPage,
-			}
-
-			b.Logs = append(b.Logs, log)
-			b.CurrentPage = curPage
-			b.TotalTime += a.Duration
-			h.BookService.Update(b)
 		}
 
 		c.Redirect(http.StatusSeeOther, "/act")
@@ -216,21 +198,6 @@ func stop(c *gin.Context) {
 			p := h.ProjService.ByID(sw.TargetID)
 			p.TotalTime += sw.Duration
 			h.ProjService.Update(p)
-
-		case act.READING:
-			b := h.BookService.ByID(sw.TargetID)
-			curPage, _ := strconv.Atoi(c.PostForm("cur_page"))
-			log := book.Log{
-				Date:        dt.Today(dt.YYYYMMDD),
-				Start:       dt.Time2Str(sw.StartTime, dt.HH_MM),
-				End:         dt.Time2Str(sw.EndTime, dt.HH_MM),
-				CurrentPage: curPage,
-			}
-
-			b.Logs = append(b.Logs, log)
-			b.CurrentPage = curPage
-			b.TotalTime += sw.Duration
-			h.BookService.Update(b)
 		}
 	}
 
@@ -248,7 +215,6 @@ func titles(c *gin.Context) {
 	data := gin.H{
 		"gaming":      h.GameService.ByStatus(game.PLAYING),
 		"programming": h.ProjService.ByStatus(project.DEVELOPING),
-		"reading":     h.BookService.ByStatus(book.READING),
 	}
 	c.JSON(http.StatusOK, data)
 }

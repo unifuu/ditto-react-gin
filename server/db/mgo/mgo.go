@@ -16,9 +16,8 @@ import (
 
 var (
 	Acts     *mongo.Collection
-	Animes   *mongo.Collection
 	Blogs    *mongo.Collection
-	Books    *mongo.Collection
+	Cols     *mongo.Collection
 	Incs     *mongo.Collection
 	Games    *mongo.Collection
 	Projects *mongo.Collection
@@ -73,9 +72,8 @@ func Connect() {
 
 	db := "ditto"
 	Acts = client.Database(db).Collection("act")
-	Animes = client.Database(db).Collection("animes")
 	Blogs = client.Database(db).Collection("blog")
-	Books = client.Database(db).Collection("book")
+	Cols = client.Database(db).Collection("col")
 	Incs = client.Database(db).Collection("inc")
 	Games = client.Database(db).Collection("game")
 	Projects = client.Database(db).Collection("project")

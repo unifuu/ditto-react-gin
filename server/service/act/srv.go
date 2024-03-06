@@ -3,7 +3,6 @@ package act
 import (
 	"ditto/db/mgo"
 	"ditto/model/act"
-	"ditto/service/book"
 	"ditto/service/game"
 	"ditto/service/project"
 	"ditto/util/datetime"
@@ -92,7 +91,6 @@ func (s *service) DayDetail(date string, typ string) ([]act.Activity, error) {
 
 	gameSrv := game.NewService()
 	projSrv := project.NewService()
-	bookSrv := book.NewService()
 
 	for i, a := range details {
 		switch a.Type {
@@ -100,8 +98,6 @@ func (s *service) DayDetail(date string, typ string) ([]act.Activity, error) {
 			details[i].Title = gameSrv.TitleByID(a.TargetID)
 		case act.PROGRAMMING:
 			details[i].Title = projSrv.ByID(a.TargetID).Title
-		case act.READING:
-			details[i].Title = bookSrv.ByID(a.TargetID).Title
 		}
 	}
 	return details, err
@@ -246,9 +242,6 @@ func (s *service) MonthDetail(date string, typ string) ([]act.Activity, error) {
 		case act.PROGRAMMING:
 			projSrv := project.NewService()
 			details[i].Title = projSrv.ByID(a.TargetID).Title
-		case act.READING:
-			bookSrv := book.NewService()
-			details[i].Title = bookSrv.ByID(a.TargetID).Title
 		}
 	}
 	return details, nil
@@ -305,9 +298,6 @@ func (s *service) TitleByIDAndType(id any, typ act.Type) string {
 	case act.PROGRAMMING:
 		projSrv := project.NewService()
 		return projSrv.ByID(id).Title
-	case act.READING:
-		bookSrv := book.NewService()
-		return bookSrv.ByID(id).Title
 	default:
 		return ""
 	}
@@ -366,9 +356,6 @@ func (s *service) WeekDetail(date string, typ string) ([]act.Activity, error) {
 		case act.PROGRAMMING:
 			projSrv := project.NewService()
 			details[i].Title = projSrv.ByID(a.TargetID).Title
-		case act.READING:
-			bookSrv := book.NewService()
-			details[i].Title = bookSrv.ByID(a.TargetID).Title
 		}
 	}
 	return details, nil
@@ -478,9 +465,6 @@ func (s *service) YearDetail(date string, typ string) ([]act.Activity, error) {
 		case act.PROGRAMMING:
 			projSrv := project.NewService()
 			details[i].Title = projSrv.ByID(a.TargetID).Title
-		case act.READING:
-			bookSrv := book.NewService()
-			details[i].Title = bookSrv.ByID(a.TargetID).Title
 		}
 	}
 	return details, nil
