@@ -8,6 +8,7 @@ import (
 	"ditto/ctr/game"
 	"ditto/ctr/inc"
 	"ditto/ctr/line"
+	"ditto/ctr/marking"
 	"ditto/ctr/project"
 	"ditto/ctr/user"
 	"strings"
@@ -28,6 +29,7 @@ func API(e *gin.Engine) {
 	game.API(e)
 	inc.API(e)
 	line.API(e)
+	marking.API(e)
 	post.API(e)
 	project.API(e)
 	user.API(e)
@@ -60,6 +62,9 @@ func react(e *gin.Engine) {
 	// Game
 	e.Use(static.Serve("/game", static.LocalFile("../client/build", true)))
 
-	// user
+	// Marking
+	e.Use(static.Serve("/marking", static.LocalFile("../client/build", true)))
+
+	// User
 	e.Use(static.Serve("/fuu", static.LocalFile("../client/build", true)))
 }

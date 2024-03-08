@@ -26,23 +26,17 @@ export interface StopwatchData {
     target_title: string
 }
 
-// [Book]
-export interface BookData {
+// [Marking]
+export interface MarkingData {
     id: string,
     title: string,
-    author: string,
-    publisher: string,
-    pub_year: string,
-    genre: string,
-    status: string,
-    cur_page: number,
-    total_page: number,
-    total_time: number,
-    hour: number,
-    min: number,
-    page_progress: string,
-    page_percentage: string,
-    logs: LogData[],
+    by: string,
+    type: string,
+    year: string,
+    status: number,
+    current: number,
+    total: number,
+    progress: string,
 }
 
 export interface LogData {

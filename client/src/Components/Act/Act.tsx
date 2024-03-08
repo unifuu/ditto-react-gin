@@ -65,7 +65,7 @@ import { ActData } from "../../interfaces"
 import { ActSummaryData } from "../../interfaces"
 import { StopwatchData } from "../../interfaces"
 import { GameData } from "../../interfaces"
-import { BookData } from "../../interfaces"
+import { MarkingData } from "../../interfaces"
 import { ProjectData } from "../../interfaces"
 import { formatDuration, formatTime } from "../../utils"
 import { Create } from "@mui/icons-material"
@@ -76,7 +76,7 @@ export default function Act() {
     const [actSummary, setActSummary] = useState<ActSummaryData[]>([])
     const [gaming, setGaming] = useState<GameData[]>([])
     const [programming, setProgramming] = useState<ProjectData[]>([])
-    const [reading, setReading] = useState<BookData[]>([])
+    const [reading, setReading] = useState<MarkingData[]>([])
     const [stopwatching, setStopwatching] = useState<StopwatchData>()
 
     // Activity Duration Tabs: ['Day', 'Week', 'Month', 'Year']
@@ -120,18 +120,13 @@ export default function Act() {
     const handleDialogTargetIdChange = (event: SelectChangeEvent<unknown>) => {
         const id = event.target.value as string
         setDialogTargetId(id)
-        const selectedBook = reading?.find((book: BookData) => book.id === id)
-
-        if (selectedBook) {
-            setDialogTargetValue(selectedBook.cur_page.toString())
-        }
     }
 
     const curPageByBookId = (id: string | undefined): number => {
-        const selectedBook = reading?.find((book: BookData) => book.id === id)
+        const selectedBook = reading?.find((book: MarkingData) => book.id === id)
         console.log(selectedBook)
         if (selectedBook) {
-            return selectedBook.cur_page
+            return selectedBook.current
         } else {
             return 0
         }

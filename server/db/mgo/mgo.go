@@ -20,6 +20,7 @@ var (
 	Cols     *mongo.Collection
 	Incs     *mongo.Collection
 	Games    *mongo.Collection
+	Markings *mongo.Collection
 	Projects *mongo.Collection
 	Tags     *mongo.Collection
 	Users    *mongo.Collection
@@ -76,6 +77,7 @@ func Connect() {
 	Cols = client.Database(db).Collection("col")
 	Incs = client.Database(db).Collection("inc")
 	Games = client.Database(db).Collection("game")
+	Markings = client.Database(db).Collection("marking")
 	Projects = client.Database(db).Collection("project")
 	Tags = client.Database(db).Collection("tag")
 	Users = client.Database(db).Collection("user")

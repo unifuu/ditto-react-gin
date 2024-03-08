@@ -18,9 +18,9 @@ import { Tabs, Tab, Badge, Toolbar, Tooltip, Button, Dialog, DialogActions, Dial
 import dayjs from 'dayjs'
 
 // Icons
-import CreateBookIcon from '@mui/icons-material/PostAdd'
+import CreateMarkingIcon from '@mui/icons-material/PostAdd'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { BookData } from '../../interfaces'
+import { MarkingData } from '../../interfaces'
 import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
 import EditIcon from '@mui/icons-material/Edit'
 import { checkIsInSchedule, formatDuration, percentageOfProgress } from '../../utils'
@@ -29,32 +29,28 @@ import { DoingBadge } from '../Common/Badges'
 import { DoneBadge } from '../Common/Badges'
 
 
-export default function Book() {
+export default function Marking() {
     // Status
-    const [books, setBooks] = useState<BookData[]>([])
-    const [status, setStatus] = useState("Reading")
-    const [readCnt, setReadCnt] = useState(0)
-    const [readingCnt, setReadingCnt] = useState(0)
-    const [toReadCnt, setToReadCnt] = useState(0)
+    const [markings, setMarkings] = useState<MarkingData[]>([])
+    const [status, setStatus] = useState(0)
+    const [doneCnt, setDoneCnt] = useState(0)
+    const [doingCnt, setDoingCnt] = useState(0)
+    const [todoCnt, setTodoCnt] = useState(0)
     const [editMode, setEditMode] = useState(false)
-    const [editing, setEditing] = useState<BookData>()
-
-    // [Styled Component]
-
+    const [editing, setEditing] = useState<MarkingData>()
 
     // [Dialog]
-    const [openCreateBook, setOpenCreateBook] = useState(false)
-    const handleCreateBookDialogOpen = () => { setOpenCreateBook(true) }
-    const handleCreateBookDialogClose = () => { setOpenCreateBook(false) }
+    const [openCreateMarking, setOpenCreateMarking] = useState(false)
+    const handleCreateMarkingDialogOpen = () => { setOpenCreateMarking(true) }
+    const handleCreateMarkingDialogClose = () => { setOpenCreateMarking(false) }
 
-    const [openEditBook, setOpenEditBook] = useState(false)
-    const handleEditBookDialogOpen = (id: string) => {
-        fetchBookById(id)
-        setOpenEditBook(true)
+    const [openEditMarking, setOpenEditMarking] = useState(false)
+    const handleEditMarkingDialogOpen = (id: string) => {
+        fetchMarkingById(id)
+        setOpenEditMarking(true)
     }
-    const handleEditBookDialogClose = () => {
-        setOpenEditBook(false)
-
+    const handleEditMarkingDialogClose = () => {
+        setOpenEditMarking(false)
     }
 
     // [Handler]
@@ -63,119 +59,63 @@ export default function Book() {
     }
 
     // [Fetcher]
-    const fetchBookById = (id: string) => {
-        fetch(`/api/book/update?id=${id}`, { method: "GET" })
+    const fetchMarkingById = (id: string) => {
+        fetch(`/api/marking/update?id=${id}`, { method: "GET" })
             .then(resp => resp.json())
             .then(data => {
                 if (data != null) {
-                    setEditing(data['book'])
-                    setOpenEditBook(true)
+                    setEditing(data['marking'])
+                    setOpenEditMarking(true)
                 }
             })
     }
 
-    function fetchBooks() {
-        fetch(`/api/book?status=${status}`)
+    function fetchMarkings() {
+        fetch(`/api/marking/query?status=${status}`)
             .then(resp => resp.json())
             .then(data => {
-                setBooks(data["books"])
-            })
-    }
-
-    function fetchStopwatch() {
-        fetch(`/api/act/stopwatch`, { method: "GET" })
-            .then(resp => resp.json())
-            .then(data => {
-                if (data != null) {
-                }
+                setMarkings(data["markings"])
             })
     }
 
     function fetchBadges() {
-        fetch(`/api/book/badge`)
+        fetch(`/api/marking/badge`)
             .then(resp => resp.json())
             .then(data => {
-                setReadCnt(data.badge["read"]);
-                setReadingCnt(data.badge["reading"]);
-                setToReadCnt(data.badge["to_read"]);
+                setDoneCnt(data.badge["done"]);
+                setDoingCnt(data.badge["doing"]);
+                setTodoCnt(data.badge["todo"]);
             })
     }
 
     function refresh() {
-        fetchBooks()
+        fetchMarkings()
         fetchBadges()
     }
 
-    function Row(props: { row: BookData }) {
+    function Row(props: { row: MarkingData }) {
         const { row } = props
         const [open, setOpen] = React.useState(false)
 
         return (
             <Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    {row.logs !== null ?
-                        <TableCell>
-                            <IconButton
-                                size="small"
-                                onClick={() => setOpen(!open)}
-                            >
-                                {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                            </IconButton>
-                        </TableCell> : <TableCell></TableCell>
-                    }
-
                     <TableCell component="th" scope="row" align="left">
                         {editMode ?
-                            <Link component="button" onClick={() => { fetchBookById(row.id) }}>
+                            <Link component="button" onClick={() => { fetchMarkingById(row.id) }}>
                                 {row.title}
                             </Link> : <>{row.title}</>
                         }
                     </TableCell>
-                    <TableCell align="right">{row.author}</TableCell>
-                    <TableCell align="right">{row.publisher}</TableCell>
-                    <TableCell align="right">{row.pub_year}</TableCell>
-                    <TableCell align="right">{row.genre}</TableCell>
-                    <TableCell align="right">{row.cur_page}</TableCell>
-                    <TableCell align="right">{row.total_page}</TableCell>
-                    <TableCell align="right" style={{ color: checkIsInSchedule(row.cur_page, row.total_page) ? 'green' : 'red' }}>
-                        {row.page_percentage}
-                    </TableCell>
-                    <TableCell align="right">{formatDuration(row.total_time)}</TableCell>
+                    <TableCell align="right">{row.by}</TableCell>
+                    <TableCell align="right">{row.type}</TableCell>
+                    <TableCell align="right">{row.year}</TableCell>
+                    <TableCell align="right">{row.current}</TableCell>
+                    <TableCell align="right">{row.total}</TableCell>
+                    <TableCell align="right">{row.progress}</TableCell>
                 </TableRow>
-                {row.logs !== null &&
-                    <TableRow>
-                        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={10}>
-                            <Collapse in={open} timeout="auto" unmountOnExit>
-                                <Box sx={{ margin: 1 }}>
-                                    <Table size="small">
-                                        <TableHead>
-                                            <TableRow>
-                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Date</TableCell>
-                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Start</TableCell>
-                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>End</TableCell>
-                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Page</TableCell>
-                                                <TableCell colSpan={2} style={{ fontWeight: 'bold' }}>Progress</TableCell>
-                                            </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                            {row.logs.map((log) => (
-                                                <TableRow key={log.date}>
-                                                    <TableCell colSpan={2} align="left">{log.date}</TableCell>
-                                                    <TableCell colSpan={2} align="left">{log.start}</TableCell>
-                                                    <TableCell colSpan={2} align="left">{log.end}</TableCell>
-                                                    <TableCell colSpan={2} align="left">{log.cur_page}</TableCell>
-                                                    <TableCell colSpan={2} align="left">{ percentageOfProgress(log.cur_page, row.total_page) }</TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </Box>
-                            </Collapse>
-                        </TableCell>
-                    </TableRow>
-                }
             </Fragment>
-        );
+        )
     }
 
     const pcScreen = useMediaQuery('(min-width:600px)')
@@ -209,18 +149,17 @@ export default function Book() {
                         sx={{ mt: 1, mb: 1 }}
                         value={status}
                         onChange={(event: React.MouseEvent<HTMLElement, MouseEvent>, value: any) => {
-                            
                             setStatus(value)
                         }}
                     >
-                        <ToggleButton value="Read">
-                            {DoneBadge(readCnt)}
+                        <ToggleButton value="1">
+                            {DoneBadge(doneCnt)}
                         </ToggleButton>
-                        <ToggleButton value="Reading">
-                            {DoingBadge(readingCnt)}
+                        <ToggleButton value="0">
+                            {DoingBadge(doingCnt)}
                         </ToggleButton>
-                        <ToggleButton value="ToRead">
-                            {TodoBadge(toReadCnt)}
+                        <ToggleButton value="-1">
+                            {TodoBadge(todoCnt)}
                         </ToggleButton>
                     </ToggleButtonGroup>
                     <Box display='flex' flexGrow={1} />
@@ -231,8 +170,8 @@ export default function Book() {
                         >
                             <EditModeIcon />
                         </IconButton>
-                        <IconButton onClick={handleCreateBookDialogOpen}>
-                            <CreateBookIcon />
+                        <IconButton onClick={handleCreateMarkingDialogOpen}>
+                            <CreateMarkingIcon />
                         </IconButton>
                     </ButtonGroup>
                 </Toolbar>
@@ -242,79 +181,72 @@ export default function Book() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell />
                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Title</TableCell>
-                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Author</TableCell>
-                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Publisher</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>By</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Type</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Year</TableCell>
-                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Genre</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Current</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Total</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Progress</TableCell>
-                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Time</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {books?.map((row) => (
+                        {markings?.map((row) => (
                             <Row key={row.id} row={row} />
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            {/* [Create Book Dialog] */}
+            {/* [Create Marking Dialog] */}
             <Dialog
-                open={openCreateBook}
-                onClose={handleCreateBookDialogClose}
+                open={openCreateMarking}
+                onClose={handleCreateMarkingDialogClose}
             >
-                <DialogTitle align="center">Create Book</DialogTitle>
+                <DialogTitle align="center">Create Marking</DialogTitle>
                 <Divider />
                 <DialogContent>
-                    <form method="post" action="/api/book/create">
+                    <form method="post" action="/api/marking/create">
                         {/* Title */}
                         <FormControl fullWidth sx={{ mt: 1 }}>
                             <TextField name="title" label="Title" required />
                         </FormControl>
 
-                        {/* Author */}
-                        <FormControl fullWidth sx={{ mt: 1 }}>
-                            <TextField name="author" label="Author" required />
-                        </FormControl>
-
                         <Grid container sx={{ mt: 1 }}>
                             <Grid item sx={{ width: '55%' }}>
-                                {/* Publisher */}
+                                {/* By */}
                                 <FormControl fullWidth>
-                                    <TextField name="publisher" label="Publisher" required />
+                                    <TextField name="by" label="By" required />
                                 </FormControl>
                             </Grid>
                             <Grid item sx={{ width: '2%' }}></Grid>
                             <Grid item sx={{ width: '43%' }}>
-                                {/* Publication Year */}
+                                {/* Year */}
                                 <FormControl fullWidth>
-                                    <TextField name="pub_year" label="Publication Year" type="number" required />
+                                    <TextField name="year" label="Year" type="number" required />
                                 </FormControl>
                             </Grid>
                         </Grid>
 
                         <Grid container sx={{ mt: 2 }}>
                             <Grid item sx={{ width: '55%' }}>
-                                {/* Genre */}
+                                {/* Type */}
                                 <FormControl fullWidth>
-                                    <InputLabel htmlFor="Genre">Genre</InputLabel>
-                                    <Select name="genre" label="Genre" required>
-                                        <MenuItem value='Fiction'>Fiction</MenuItem>
-                                        <MenuItem value='Non-Fiction'>Non-Fiction</MenuItem>
+                                    <InputLabel htmlFor="Type">Type</InputLabel>
+                                    <Select name="type" label="Type" required>
+                                        <MenuItem value='Anime'>Anime</MenuItem>
+                                        <MenuItem value='Book'>Book</MenuItem>
+                                        <MenuItem value='Movie'>Movie</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
                             <Grid item sx={{ width: '2%' }}></Grid>
                             <Grid item sx={{ width: '43%' }}>
-                                {/* Total Page */}
+                                {/* Total */}
                                 <FormControl fullWidth>
                                     <TextField
-                                        name="total_page"
-                                        label="Total Page"
+                                        name="total"
+                                        label="Total"
                                         type="number"
                                         InputProps={{ inputProps: { min: 1 } }}
                                     />
@@ -323,22 +255,22 @@ export default function Book() {
                         </Grid>
 
                         <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
-                            <Button color="secondary" onClick={handleCreateBookDialogClose}>Cancel</Button>
+                            <Button color="secondary" onClick={handleCreateMarkingDialogClose}>Cancel</Button>
                             <Button type="submit" color="success">Create</Button>
                         </DialogActions>
                     </form>
                 </DialogContent>
             </Dialog>
             
-            {/* [Edit Book Dialog] */}
+            {/* [Edit Marking Dialog] */}
             <Dialog
-                open={openEditBook}
-                onClose={handleEditBookDialogClose}
+                open={openEditMarking}
+                onClose={handleEditMarkingDialogClose}
             >
-                <DialogTitle align="center">Edit Book</DialogTitle>
+                <DialogTitle align="center">Edit Marking</DialogTitle>
                 <Divider />
                 <DialogContent>
-                    <form method="post" action="/api/book/update">
+                    <form method="post" action="/api/marking/update">
                         {/* ID */}
                         <FormControl fullWidth>
                             <TextField
@@ -361,34 +293,25 @@ export default function Book() {
                                 required />
                         </FormControl>
 
-                        {/* Author */}
-                        <FormControl fullWidth sx={{ mt: 1.3 }}>
-                            <TextField
-                                name="author"
-                                label="Author"
-                                defaultValue={editing?.author}
-                                required />
-                        </FormControl>
-
                         <Grid container sx={{ mt: 1.3 }}>
                             <Grid item sx={{ width: '49%' }}>
-                                {/* Publisher */}
+                                {/* By */}
                                 <FormControl fullWidth>
                                     <TextField
-                                        name="publisher"
-                                        label="Publisher"
-                                        defaultValue={editing?.publisher}
+                                        name="by"
+                                        label="By"
+                                        defaultValue={editing?.by}
                                         required />
                                 </FormControl>
                             </Grid>
                             <Grid item sx={{ width: '2%' }} />
                             <Grid item sx={{ width: '49%' }}>
-                                {/* Publication Year */}
+                                {/* Year */}
                                 <FormControl fullWidth>
                                     <TextField
-                                        name="pub_year"
-                                        label="Publication Year"
-                                        defaultValue={editing?.pub_year}
+                                        name="year"
+                                        label="Year"
+                                        defaultValue={editing?.year}
                                         type="number"
                                         required />
                                 </FormControl>
@@ -397,12 +320,13 @@ export default function Book() {
 
                         <Grid container sx={{ mt: 1.3 }}>
                             <Grid item sx={{ width: '49%' }}>
-                                {/* Genre */}
+                                {/* Type */}
                                 <FormControl fullWidth>
-                                    <InputLabel htmlFor="Genre">Genre</InputLabel>
-                                    <Select name="genre" label="Genre" defaultValue={editing?.genre} required>
-                                        <MenuItem value='Fiction'>Fiction</MenuItem>
-                                        <MenuItem value='Non-Fiction'>Non-Fiction</MenuItem>
+                                    <InputLabel htmlFor="Type">Type</InputLabel>
+                                    <Select name="type" label="Type" defaultValue={editing?.type} required>
+                                        <MenuItem value='Anime'>Anime</MenuItem>
+                                        <MenuItem value='Book'>Book</MenuItem>
+                                        <MenuItem value='Movie'>Movie</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -413,9 +337,9 @@ export default function Book() {
                                 <FormControl fullWidth>
                                     <InputLabel htmlFor="Status">Status</InputLabel>
                                     <Select name="status" label="Status" defaultValue={editing?.status} required>
-                                        <MenuItem value='Read'>Read</MenuItem>
-                                        <MenuItem value='Reading'>Reading</MenuItem>
-                                        <MenuItem value='ToRead'>ToRead</MenuItem>
+                                        <MenuItem value='1'>Done</MenuItem>
+                                        <MenuItem value='0'>Doing</MenuItem>
+                                        <MenuItem value='-1'>Todo</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -423,12 +347,12 @@ export default function Book() {
 
                         <Grid container sx={{ mt: 1.3 }}>
                             <Grid item sx={{ width: '49%' }}>
-                                {/* Current Page */}
+                                {/* Current */}
                                 <FormControl fullWidth>
                                     <TextField
-                                        name="cur_page"
-                                        label="Current Page"
-                                        defaultValue={editing?.cur_page}
+                                        name="current"
+                                        label="Current"
+                                        defaultValue={editing?.current}
                                         type="number"
                                         InputProps={{ inputProps: { min: 0 } }}
                                     />
@@ -436,12 +360,12 @@ export default function Book() {
                             </Grid>
                             <Grid item sx={{ width: '2%' }} />
                             <Grid item sx={{ width: '49%' }}>
-                                {/* Total Page */}
+                                {/* Total */}
                                 <FormControl fullWidth>
                                     <TextField
-                                        name="total_page"
-                                        label="Total Page"
-                                        defaultValue={editing?.total_page}
+                                        name="total"
+                                        label="Total"
+                                        defaultValue={editing?.total}
                                         type="number"
                                         InputProps={{ inputProps: { min: 1 } }}
                                     />
@@ -450,7 +374,7 @@ export default function Book() {
                         </Grid>
 
                         <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
-                            <Button color="secondary" onClick={handleEditBookDialogClose}>Cancel</Button>
+                            <Button color="secondary" onClick={handleEditMarkingDialogClose}>Cancel</Button>
                             <Button type="submit" color="success">Update</Button>
                         </DialogActions>
                     </form>

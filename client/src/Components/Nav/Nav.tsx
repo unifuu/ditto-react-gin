@@ -4,7 +4,7 @@ import IconButton from '@mui/material/IconButton'
 import BloggingIcon from '@mui/icons-material/Article'
 import ActingIcon from '@mui/icons-material/History'
 import GamingIcon from '@mui/icons-material/VideogameAsset'
-import ReadingIcon from '@mui/icons-material/AutoStories'
+import MarkingIcon from '@mui/icons-material/Bookmarks'
 import AutoStoriesIcon from '@mui/icons-material/AutoStories'
 import Box from '@mui/material/Box'
 import { ButtonGroup } from '@mui/material'
@@ -28,8 +28,8 @@ export default function AuthNav() {
                             }}
                         />
                     </IconButton>
-                    <IconButton onClick={() => { navigate("/book") }}>
-                        <ReadingIcon
+                    <IconButton onClick={() => { navigate("/marking") }}>
+                        <MarkingIcon
                             sx={{
                                 fontSize: 30,
                                 color: green[300],
