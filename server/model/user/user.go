@@ -14,3 +14,8 @@ type User struct {
 	CreatedAt time.Time          `bson:"created_at"`
 	UpdatedAt time.Time          `bson:"updated_at"`
 }
+
+// Auth token model
+type AuthToken struct {
+	Token string `json:"auth_token"`
+}

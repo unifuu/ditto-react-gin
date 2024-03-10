@@ -13,6 +13,20 @@ import (
 func API(e *gin.Engine) {
 	e.Any("/api/user/login", login)
 	e.Any("/api/user/checkAuth", checkAuth)
+	e.Any("/api/user/checkToken", checkToken)
+}
+
+// checkToken checks the auth token is expired or not
+func checkToken(c *gin.Context) {
+	var token user.AuthToken
+	c.BindJSON(&token)
+
+	userID, _ := rds.Get(token.Token)
+	if len(userID) > 0 {
+		c.JSON(http.StatusOK, gin.H{"msg": "OK"})
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"msg": "NG"})
+	}
 }
 
 // Handle user login

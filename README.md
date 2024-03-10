@@ -92,8 +92,8 @@ docker cp mongodump_20230806 8ed:/mongodump_20230806
 docker exec -i 8ed /usr/bin/mongorestore --db ditto /mongodump_20230806/ditto
 
 # Mac
-sudo docker cp 20240204 d97:/mongodump_20240204
-e
+sudo docker cp 20240204 103:/mongodump_20240204
+docker exec -i 103 /usr/bin/mongorestore --db ditto /mongodump_20240204/ditto
 ```
 
 ### [React] Run program

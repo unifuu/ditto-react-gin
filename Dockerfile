@@ -24,4 +24,4 @@ CMD ./main
 
 #$ docker build -t ditto-react-gin .
 #$ docker run -p 80:8080 -d ditto-react-gin
-#$ docker-compose up -d --no-deps --build web
+#$ docker-compose up -d --no-deps --build

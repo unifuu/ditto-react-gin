@@ -63,7 +63,7 @@ func create(c *gin.Context) {
 		// })
 	case "POST":
 		title := c.PostForm("title")
-		madeBy := c.PostForm("made_by")
+		by := c.PostForm("by")
 		typ := c.PostForm("type")
 		date := c.PostForm("date")
 		color := c.PostForm("color")
@@ -71,13 +71,13 @@ func create(c *gin.Context) {
 		price, _ := strconv.Atoi(c.PostForm("price"))
 
 		h.ColService.Create(col.Col{
-			Title:  title,
-			MadeBy: madeBy,
-			Type:   col.Type(typ),
-			Date:   date,
-			Color:  color,
-			Spec:   spec,
-			Price:  price,
+			Title: title,
+			By:    by,
+			Type:  col.Type(typ),
+			Date:  date,
+			Color: color,
+			Spec:  spec,
+			Price: price,
 		})
 		c.Redirect(http.StatusSeeOther, "/col")
 	}
@@ -108,7 +108,7 @@ func update(c *gin.Context) {
 	case "POST":
 		id := c.PostForm("id")
 		title := c.PostForm("title")
-		madeBy := c.PostForm("made_by")
+		by := c.PostForm("by")
 		typ := c.PostForm("type")
 		date := c.PostForm("date")
 		color := c.PostForm("color")
@@ -117,7 +117,7 @@ func update(c *gin.Context) {
 
 		coll := h.ColService.ByID(id)
 		coll.Title = title
-		coll.MadeBy = madeBy
+		coll.By = by
 		coll.Type = col.Type(typ)
 		coll.Date = date
 		coll.Color = color
