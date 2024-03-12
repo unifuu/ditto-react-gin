@@ -4,9 +4,10 @@ import (
 	h "ditto/ctr"
 	mw "ditto/middleware"
 	"ditto/model/col"
+	"ditto/model/common"
+	"ditto/util/format"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,12 +17,13 @@ const (
 )
 
 func API(e *gin.Engine) {
-	anon := e.Group("/api/book")
+	anon := e.Group("/api/col")
 	{
-		anon.GET("/", query)
+		anon.GET("/", index)
+		anon.GET("/index", index)
 	}
 
-	auth := e.Group("/api/book").Use(mw.Auth)
+	auth := e.Group("/api/col").Use(mw.Auth)
 	{
 		// auth.GET("/badge", badge)
 		auth.Any("/create", create)
@@ -37,52 +39,30 @@ func API(e *gin.Engine) {
 // 	})
 // }
 
-func query(c *gin.Context) {
-	typ := col.Type(c.Query("type"))
-
-	page, err := strconv.Atoi(c.Query("page"))
-	if err != nil {
-		page = 1
-	}
-
-	books, totalPage := h.ColService.PageByType(typ, page, PAGE_LIMIT)
-
-	data := gin.H{
-		"books":      books,
-		"total_page": totalPage,
-	}
-
-	c.JSON(http.StatusOK, data)
-}
-
+// create handles create a new collection
 func create(c *gin.Context) {
 	switch c.Request.Method {
 	case "GET":
 		// c.JSON(http.StatusOK, gin.H{
 		// 	"reading": h.ColService.ByType(book.READING),
 		// })
-	case "POST":
-		title := c.PostForm("title")
-		by := c.PostForm("by")
-		typ := c.PostForm("type")
-		date := c.PostForm("date")
-		color := c.PostForm("color")
-		spec := c.PostForm("spec")
-		price, _ := strconv.Atoi(c.PostForm("price"))
 
+	case "POST":
 		h.ColService.Create(col.Col{
-			Title: title,
-			By:    by,
-			Type:  col.Type(typ),
-			Date:  date,
-			Color: color,
-			Spec:  spec,
-			Price: price,
+			Title:    c.PostForm("title"),
+			By:       c.PostForm("by"),
+			Type:     col.Type(c.PostForm("type")),
+			AcqDate:  c.PostForm("acq_date"),
+			CompDate: c.PostForm("comp_date"),
+			Color:    c.PostForm("color"),
+			Spec:     c.PostForm("spec"),
+			Price:    format.ParseInt(c.PostForm("price")),
 		})
 		c.Redirect(http.StatusSeeOther, "/col")
 	}
 }
 
+// delete handles delete the collection
 func delete(c *gin.Context) {
 	id := c.Query("id")
 
@@ -95,34 +75,48 @@ func delete(c *gin.Context) {
 	}
 }
 
+// index handles the query without authorization
+func index(c *gin.Context) {
+	page := format.FormatPage(c.Query("page"))
+	cols, totalPage := h.ColService.PageByStatusType(common.DOING, "", page, PAGE_LIMIT)
+
+	data := gin.H{
+		"cols":       cols,
+		"total_page": totalPage,
+	}
+	c.JSON(http.StatusOK, data)
+}
+
+// query handles query the collection from database
+func query(c *gin.Context) {
+	typ := col.Type(c.Query("type"))
+	page := format.FormatPage(c.Query("page"))
+	cols, totalPage := h.ColService.PageByStatusType(common.DOING, typ, page, PAGE_LIMIT)
+
+	data := gin.H{
+		"cols":       cols,
+		"total_page": totalPage,
+	}
+	c.JSON(http.StatusOK, data)
+}
+
+// update handles update the collection
 func update(c *gin.Context) {
 	switch c.Request.Method {
 	case "GET":
-		id := c.Query("id")
-		col := h.ColService.ByID(id)
-
-		c.JSON(http.StatusOK, gin.H{
-			"col": col,
-		})
+		col := h.ColService.ByID(c.Query("id"))
+		c.JSON(http.StatusOK, gin.H{"col": col})
 
 	case "POST":
-		id := c.PostForm("id")
-		title := c.PostForm("title")
-		by := c.PostForm("by")
-		typ := c.PostForm("type")
-		date := c.PostForm("date")
-		color := c.PostForm("color")
-		spec := c.PostForm("spec")
-		price, _ := strconv.Atoi(c.PostForm("price"))
-
-		coll := h.ColService.ByID(id)
-		coll.Title = title
-		coll.By = by
-		coll.Type = col.Type(typ)
-		coll.Date = date
-		coll.Color = color
-		coll.Spec = spec
-		coll.Price = price
+		coll := h.ColService.ByID(c.PostForm("id"))
+		coll.Title = c.PostForm("title")
+		coll.By = c.PostForm("by")
+		coll.Type = col.Type(c.PostForm("type"))
+		coll.AcqDate = c.PostForm("acq_date")
+		coll.CompDate = c.PostForm("comp_date")
+		coll.Color = c.PostForm("color")
+		coll.Spec = c.PostForm("spec")
+		coll.Price = format.ParseInt(c.PostForm("price"))
 
 		h.ColService.Update(coll)
 		c.Redirect(http.StatusSeeOther, "/col")

@@ -17,14 +17,15 @@ const (
 type Type string
 
 type Col struct {
-	ID    primitive.ObjectID `bson:"_id" json:"id"`
-	Title string             `bson:"title" json:"title"`
-	By    string             `bson:"by" json:"by"`
-	Type  Type               `bson:"type" json:"type"`
-	Date  string             `bson:"date" json:"date"`
-	Color string             `bson:"color" json:"color"`
-	Spec  string             `bson:"spec" json:"spec"`
-	Price int                `bson:"price" json:"price"`
+	ID       primitive.ObjectID `bson:"_id" json:"id"`
+	Title    string             `bson:"title" json:"title"`
+	By       string             `bson:"by" json:"by"`
+	Type     Type               `bson:"type" json:"type"`
+	AcqDate  string             `bson:"acq_date" json:"acq_date"`
+	CompDate string             `bson:"comp_date" json:"comp_date"`
+	Color    string             `bson:"color" json:"color"`
+	Spec     string             `bson:"spec" json:"spec"`
+	Price    int                `bson:"price" json:"price"`
 
 	CreatedAt time.Time `bson:"created_at" json:"-"`
 	UpdatedAt time.Time `bson:"updated_at" json:"-"`

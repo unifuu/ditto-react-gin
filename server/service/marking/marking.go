@@ -75,12 +75,7 @@ func (s *service) Delete(id any) error {
 func (s *service) PageByStatusType(status cm.Status, typ mk.Type, page, limit int) ([]mk.Marking, int) {
 	var filter bson.D
 
-	// Check status
-	if cm.CheckStatus(status) {
-		filter = bson.D{primitive.E{Key: "status", Value: status}}
-	} else {
-		filter = bson.D{primitive.E{Key: "status", Value: cm.DOING}}
-	}
+	filter = bson.D{primitive.E{Key: "status", Value: status}}
 
 	if len(typ) > 0 {
 		filter = append(filter, primitive.E{Key: "type", Value: typ})

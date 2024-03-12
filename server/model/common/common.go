@@ -1,7 +1,5 @@
 package common
 
-import "math"
-
 type Status int
 
 const (
@@ -26,18 +24,5 @@ func ToStatus(status string) Status {
 		return DONE
 	default:
 		return DOING
-	}
-}
-
-func CheckStatus(status any) bool {
-	switch status.(type) {
-	case int:
-		if math.Abs(float64(status.(int))) > 1 {
-			return false
-		} else {
-			return true
-		}
-	default:
-		return false
 	}
 }

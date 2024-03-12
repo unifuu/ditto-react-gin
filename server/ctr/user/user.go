@@ -18,10 +18,8 @@ func API(e *gin.Engine) {
 
 // checkToken checks the auth token is expired or not
 func checkToken(c *gin.Context) {
-	var token user.AuthToken
-	c.BindJSON(&token)
-
-	userID, _ := rds.Get(token.Token)
+	token := c.Query("auth_token")
+	userID, _ := rds.Get(token)
 	if len(userID) > 0 {
 		c.JSON(http.StatusOK, gin.H{"msg": "OK"})
 	} else {

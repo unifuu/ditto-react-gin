@@ -3,6 +3,7 @@ package col
 import (
 	"ditto/db/mgo"
 	"ditto/model/col"
+	cm "ditto/model/common"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -18,7 +19,7 @@ type Service interface {
 	ByType(typ col.Type) []col.Col
 	Create(col.Col) error
 	Delete(id any) error
-	PageByType(typ col.Type, page, limit int) ([]col.Col, int)
+	PageByStatusType(status cm.Status, typ col.Type, page, limit int) ([]col.Col, int)
 	Update(col.Col) error
 }
 
@@ -68,13 +69,15 @@ func (s *service) Delete(id any) error {
 	return nil
 }
 
-func (s *service) PageByType(typ col.Type, page, limit int) ([]col.Col, int) {
+func (s *service) PageByStatusType(status cm.Status, typ col.Type, page, limit int) ([]col.Col, int) {
 	var filter bson.D
 
 	// Check type
 	if len(typ) != 0 {
 		filter = bson.D{primitive.E{Key: "type", Value: typ}}
 	}
+
+	filter = append(filter, primitive.E{Key: "status", Value: status})
 
 	var cols []col.Col
 	sort := bson.D{primitive.E{Key: "title", Value: 1}}
@@ -89,9 +92,10 @@ func (s *service) Update(c col.Col) error {
 	update := bson.D{primitive.E{
 		Key: "$set", Value: bson.D{
 			primitive.E{Key: "title", Value: c.Title},
-			primitive.E{Key: "made_by", Value: c.MadeBy},
+			primitive.E{Key: "by", Value: c.By},
 			primitive.E{Key: "type", Value: c.Type},
-			primitive.E{Key: "date", Value: c.Date},
+			primitive.E{Key: "acq_date", Value: c.AcqDate},
+			primitive.E{Key: "comp_date", Value: c.CompDate},
 			primitive.E{Key: "color", Value: c.Color},
 			primitive.E{Key: "spec", Value: c.Spec},
 			primitive.E{Key: "price", Value: c.Price},

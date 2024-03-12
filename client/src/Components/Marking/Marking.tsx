@@ -32,7 +32,7 @@ import { DoneBadge } from '../Common/Badges'
 export default function Marking() {
     // Status
     const [markings, setMarkings] = useState<MarkingData[]>([])
-    const [status, setStatus] = useState(0)
+    const [status, setStatus] = useState("0")
     const [doneCnt, setDoneCnt] = useState(0)
     const [doingCnt, setDoingCnt] = useState(0)
     const [todoCnt, setTodoCnt] = useState(0)

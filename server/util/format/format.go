@@ -2,6 +2,7 @@ package format
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -35,4 +36,20 @@ func StringToSlice(s string) []string {
 		results = append(results, s)
 	}
 	return results
+}
+
+func ParseInt(s string) int {
+	i, err := strconv.Atoi(s)
+	if err != nil {
+		return 0
+	}
+	return i
+}
+
+func FormatPage(p string) int {
+	page := ParseInt(p)
+	if page <= 0 {
+		return 1
+	}
+	return page
 }

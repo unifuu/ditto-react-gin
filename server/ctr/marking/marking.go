@@ -5,6 +5,7 @@ import (
 	mw "ditto/middleware"
 	cm "ditto/model/common"
 	mk "ditto/model/marking"
+	"ditto/util/format"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -99,19 +100,13 @@ func delete(c *gin.Context) {
 func query(c *gin.Context) {
 	typ := mk.Type(c.Query("Type"))
 	status := cm.ToStatus(c.Query("status"))
-
-	page, err := strconv.Atoi(c.Query("page"))
-	if err != nil {
-		page = 1
-	}
-
+	page := format.FormatPage(c.Query("page"))
 	markings, totalPage := h.MarkingService.PageByStatusType(status, typ, page, PAGE_LIMIT)
 
 	data := gin.H{
 		"markings":   markings,
 		"total_page": totalPage,
 	}
-
 	c.JSON(http.StatusOK, data)
 }
 
