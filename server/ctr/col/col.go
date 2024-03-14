@@ -49,14 +49,13 @@ func create(c *gin.Context) {
 
 	case "POST":
 		h.ColService.Create(col.Col{
-			Title:    c.PostForm("title"),
-			By:       c.PostForm("by"),
-			Type:     col.Type(c.PostForm("type")),
-			AcqDate:  c.PostForm("acq_date"),
-			CompDate: c.PostForm("comp_date"),
-			Color:    c.PostForm("color"),
-			Spec:     c.PostForm("spec"),
-			Price:    format.ParseInt(c.PostForm("price")),
+			Title: c.PostForm("title"),
+			By:    c.PostForm("by"),
+			Type:  col.Type(c.PostForm("type")),
+			Date:  c.PostForm("date"),
+			Color: c.PostForm("color"),
+			Spec:  c.PostForm("spec"),
+			Price: format.ParseInt(c.PostForm("price")),
 		})
 		c.Redirect(http.StatusSeeOther, "/col")
 	}
@@ -112,8 +111,7 @@ func update(c *gin.Context) {
 		coll.Title = c.PostForm("title")
 		coll.By = c.PostForm("by")
 		coll.Type = col.Type(c.PostForm("type"))
-		coll.AcqDate = c.PostForm("acq_date")
-		coll.CompDate = c.PostForm("comp_date")
+		coll.Date = c.PostForm("date")
 		coll.Color = c.PostForm("color")
 		coll.Spec = c.PostForm("spec")
 		coll.Price = format.ParseInt(c.PostForm("price"))
