@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react"
+import React, { FormEvent, Fragment, useEffect, useState } from "react"
 import dayjs, { Dayjs } from 'dayjs'
 import { AppBar, Divider, Link, ListItemIcon, ListItemText, Menu, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs } from '@mui/material'
 import { DialogActions } from '@mui/material'
@@ -41,8 +41,6 @@ import { red } from '@mui/material/colors'
 // Icons
 import MenuIcon from '@mui/icons-material/Menu'
 import PostAddIcon from '@mui/icons-material/PostAdd'
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports'
-import LaptopChromebookIcon from '@mui/icons-material/LaptopChromebook'
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import CalendarWeekIcon from '@mui/icons-material/DateRange'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
@@ -54,8 +52,6 @@ import CheckBoxBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxCheckedIcon from '@mui/icons-material/CheckBox'
 import GamingIcon from '@mui/icons-material/SportsEsports'
 import ProgrammingIcon from '@mui/icons-material/Terminal'
-import DrawingIcon from '@mui/icons-material/Draw'
-import ReadingIcon from '@mui/icons-material/AutoStories'
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft'
 import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight'
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
@@ -76,7 +72,6 @@ export default function Act() {
     const [actSummary, setActSummary] = useState<ActSummaryData[]>([])
     const [gaming, setGaming] = useState<GameData[]>([])
     const [programming, setProgramming] = useState<ProjectData[]>([])
-    const [reading, setReading] = useState<MarkingData[]>([])
     const [stopwatching, setStopwatching] = useState<StopwatchData>()
 
     // Activity Duration Tabs: ['Day', 'Week', 'Month', 'Year']
@@ -93,7 +88,7 @@ export default function Act() {
         return startOfWeek + " ~ " + endOfWeek + ", " + today.format('YYYY')
     }
 
-    // Activity Type Tabs: ['All', 'Gaming', 'programming', 'reading', 'drawing']
+    // Activity Type Tabs: ['All', 'Gaming', 'programming']
     const [tabType, setTabType] = useState("All")
     const changeTabActType = (event: React.SyntheticEvent, typ: string) => {
         setTabType(typ)
@@ -120,16 +115,6 @@ export default function Act() {
     const handleDialogTargetIdChange = (event: SelectChangeEvent<unknown>) => {
         const id = event.target.value as string
         setDialogTargetId(id)
-    }
-
-    const curPageByBookId = (id: string | undefined): number => {
-        const selectedBook = reading?.find((book: MarkingData) => book.id === id)
-        console.log(selectedBook)
-        if (selectedBook) {
-            return selectedBook.current
-        } else {
-            return 0
-        }
     }
 
     const handleDialogTargetValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,7 +154,6 @@ export default function Act() {
                 if (data != null) {
                     setGaming(data["gaming"])
                     setProgramming(data["programming"])
-                    setReading(data["reading"])
                 }
             })
     }
@@ -185,10 +169,6 @@ export default function Act() {
     const [openStopwatch, setOpenStopwatch] = useState(false)
     const handleStopwatchOpen = () => {
         fetchTitles()
-        // setCurPage(curPageByBookId(stopwatching?.target_id).toString())
-        // if (stopwatching) {
-        //     setCurPage(curPageByBookId(stopwatching.target_id).toString())
-        // }
         setOpenStopwatch(true)
     }
     const handleStopwatchClose = () => {
@@ -227,8 +207,8 @@ export default function Act() {
         })
     }
 
-    const handleStopStopwatchSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const handleStopStopwatchSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
         fetch("/api/act/stopwatch/stop", {
             method: "POST",
         })
@@ -257,8 +237,8 @@ export default function Act() {
         setTempDate(dayjs(new Date()))
     }
 
-    const handleDeleteActSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
+    const handleDeleteActSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
 
         fetch("/api/act/delete", {
             method: "POST",
@@ -436,14 +416,6 @@ export default function Act() {
                                     value="Programming"
                                     icon={<ProgrammingIcon sx={{ fontSize: 30, color: tabType === 'Programming' ? LightColorByType('Programming') : 'disabled' }} />}
 
-                                />
-                                <Tab
-                                    value="Reading"
-                                    icon={<ReadingIcon sx={{ fontSize: 30, color: tabType === 'Reading' ? LightColorByType('Reading') : 'disabled' }} />}
-                                />
-                                <Tab
-                                    value="Drawing"
-                                    icon={<DrawingIcon sx={{ fontSize: 30, color: tabType === 'Drawing' ? LightColorByType('Drawing') : 'disabled' }} />}
                                 />
                             </Tabs>
                         </Grid>
@@ -975,12 +947,6 @@ export default function Act() {
                                 value={dialogFormType}
                                 onChange={(e) => setDialogFormType(e.target.value)}
                             >
-                                <MenuItem value='Drawing'>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <DrawingIcon />
-                                        <div>&nbsp;Drawing</div>
-                                    </div>
-                                </MenuItem>
                                 <MenuItem value='Gaming'>
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <GamingIcon />
@@ -991,12 +957,6 @@ export default function Act() {
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <ProgrammingIcon />
                                         <div>&nbsp;Programming</div>
-                                    </div>
-                                </MenuItem>
-                                <MenuItem value='Reading'>
-                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                        <ReadingIcon />
-                                        <div>&nbsp;Reading</div>
                                     </div>
                                 </MenuItem>
                             </Select>
@@ -1106,12 +1066,6 @@ export default function Act() {
                                         value={dialogFormType}
                                         onChange={(e) => setDialogFormType(e.target.value)}
                                     >
-                                        <MenuItem value='Drawing'>
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                <DrawingIcon />
-                                                <div>&nbsp;Drawing</div>
-                                            </div>
-                                        </MenuItem>
                                         <MenuItem value='Gaming'>
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                                 <GamingIcon />
@@ -1122,12 +1076,6 @@ export default function Act() {
                                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                                 <ProgrammingIcon />
                                                 <div>&nbsp;Programming</div>
-                                            </div>
-                                        </MenuItem>
-                                        <MenuItem value='Reading'>
-                                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                <ReadingIcon />
-                                                <div>&nbsp;Reading</div>
                                             </div>
                                         </MenuItem>
                                     </Select>
@@ -1153,23 +1101,6 @@ export default function Act() {
                                 <FormControl fullWidth sx={{ mt: 2 }}>
                                     <TextField label="Title" value={stopwatching?.target_title} disabled></TextField>
                                 </FormControl>
-
-                                {
-                                    stopwatching?.type === 'Reading' ?
-                                        <FormControl fullWidth sx={{ mt: 2 }}>
-                                            <TextField
-                                                label="Current Page"
-                                                name='cur_page'
-                                                type='number'
-                                                defaultValue={curPageByBookId(stopwatching?.target_id)}
-                                                // value={curPage}
-                                                // onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                                                //     setCurPage(event.target.value)
-                                                // }}
-                                                required />
-                                        </FormControl>
-                                        : <></>
-                                }
 
                                 <DialogActions style={{ justifyContent: "space-between" }} sx={{ mt: 1, mb: -1, ml: -1, mr: -1 }}>
                                     <Button color="error" onClick={handleTerminateStopwatch}>Terminate</Button>
@@ -1203,14 +1134,6 @@ export default function Act() {
                         onClick={() => handleDeleteActOpen(act)}
                     />
                 </>
-            case 'Reading':
-                return <>
-                    <ReadingIcon
-                        style={{ verticalAlign: 'middle' }}
-                        sx={{ color: LightColorByType(act.type) }}
-                        onClick={() => handleDeleteActOpen(act)}
-                    />
-                </>
         }
     }
 
@@ -1226,13 +1149,6 @@ export default function Act() {
             case 'Programming':
                 return <>
                     <ProgrammingIcon
-                        style={{ verticalAlign: 'middle' }}
-                        sx={{ color: DeepColorByType(type) }}
-                    />
-                </>
-            case 'Reading':
-                return <>
-                    <ReadingIcon
                         style={{ verticalAlign: 'middle' }}
                         sx={{ color: DeepColorByType(type) }}
                     />
@@ -1278,60 +1194,6 @@ export default function Act() {
                         </Select>
                     </FormControl>
                 </>
-            case 'Reading':
-                if (createMode) {
-                    return <>
-                        <Grid container sx={{ mt: 1 }}>
-                            <Grid item width='73%'>
-                                <FormControl fullWidth>
-                                    <InputLabel htmlFor="type">Book</InputLabel>
-                                    <Select
-                                        name="targetId"
-                                        label="Book"
-                                        value={dialogTargetId}
-                                        onChange={handleDialogTargetIdChange}
-                                    >
-                                        {reading?.map((b: any, index) => {
-                                            return (
-                                                <MenuItem key={index} value={b.id}>{b.title}</MenuItem>
-                                            )
-                                        })}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item width='2%' />
-                            <Grid item width='25%'>
-                                <FormControl fullWidth>
-                                    <TextField
-                                        label='Page'
-                                        name='cur_page'
-                                        type='number'
-                                        value={dialogTargetValue}
-                                        onChange={handleDialogTargetValueChange}
-                                    />
-                                </FormControl>
-                            </Grid>
-                        </Grid>
-                    </>
-                } else {
-                    return <>
-                        <FormControl fullWidth sx={{ mt: 1 }}>
-                            <InputLabel htmlFor="type">Book</InputLabel>
-                            <Select
-                                name="targetId"
-                                label="Book"
-                                value={dialogTargetId}
-                                onChange={handleDialogTargetIdChange}
-                            >
-                                {reading?.map((b: any, index) => {
-                                    return (
-                                        <MenuItem key={index} value={b.id}>{b.title}</MenuItem>
-                                    )
-                                })}
-                            </Select>
-                        </FormControl>
-                    </>
-                }
         }
     }
 }

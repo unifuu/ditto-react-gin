@@ -10,45 +10,35 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// TODO
+// - Hash and Salt Passwords
+
 func API(e *gin.Engine) {
-	e.Any("/api/user/login", login)
 	e.Any("/api/user/checkAuth", checkAuth)
 	e.Any("/api/user/checkToken", checkToken)
 }
 
-// checkToken checks the auth token is expired or not
-func checkToken(c *gin.Context) {
-	token := c.Query("auth_token")
-	userID, _ := rds.Get(token)
-	if len(userID) > 0 {
-		c.JSON(http.StatusOK, gin.H{"msg": "OK"})
-	} else {
-		c.JSON(http.StatusNotFound, gin.H{"msg": "NG"})
-	}
-}
-
-// Handle user login
-func login(c *gin.Context) {
+// Handle user checkAuth
+func checkAuth(c *gin.Context) {
 	var u user.User
 	c.BindJSON(&u)
 
+	// Check the username and password is valid or not
 	auth, err := h.UserService.Login(u.Username, u.Password)
+
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{
-			"msg":        "NG",
-			"auth_token": "",
-		})
-		return
+		respJson(c, false, "")
 	} else {
+		// Generate a token and set it to Redis
 		token := mw.SetAuth(c, auth.ID.Hex())
-		c.JSON(http.StatusOK, gin.H{
-			"msg":        "OK",
-			"auth_token": token,
-		})
+
+		respJson(c, true, token)
 	}
 }
 
-func checkAuth(c *gin.Context) {
+// checkToken checks the auth token is expired or not
+func checkToken(c *gin.Context) {
+
 	// Get auth token from cookie
 	authToken, _ := c.Cookie("auth_token")
 
@@ -57,16 +47,38 @@ func checkAuth(c *gin.Context) {
 		authToken = c.Request.Header.Get("auth_token")
 	}
 
+	// Get auth token from url
+	if len(authToken) == 0 {
+		authToken = c.Query("auth_token")
+	}
+
+	// Cannot get auth token
+	if len(authToken) == 0 {
+		respJson(c, false, "")
+		return
+	}
+
+	// Get user id from Redis
 	userID, _ := rds.Get(authToken)
+
+	// Check the user id is exist or not
 	if len(userID) > 0 {
-		c.JSON(http.StatusOK, gin.H{"user_id": userID})
+		respJson(c, true, authToken)
 	} else {
-		c.JSON(http.StatusNotFound, gin.H{"user_id": ""})
+		respJson(c, false, "")
 	}
 }
 
-// Handle user logout
-// func logout(c *gin.Context) {
-// 	mw.ClearAuth(c)
-// 	c.Redirect(http.StatusSeeOther, "api/user/login")
-// }
+func respJson(c *gin.Context, isAuth bool, token string) {
+	if isAuth {
+		c.JSON(http.StatusOK, gin.H{
+			"is_auth":    true,
+			"auth_token": token,
+		})
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{
+			"is_auth":    false,
+			"auth_token": token,
+		})
+	}
+}
