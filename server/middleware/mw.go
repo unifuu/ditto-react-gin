@@ -42,15 +42,21 @@ func SetAuth(c *gin.Context, userID string) string {
 func getAuth(c *gin.Context) any {
 	authToken, _ := c.Cookie("auth_token")
 
+	if authToken == "undefined" {
+		authToken = ""
+	}
+
 	// If cannot get auth token from cookie
 	if len(authToken) == 0 {
-		authToken = c.Request.Header["Auth_token"][0]
+		if len(c.Request.Header["Auth_token"]) > 0 {
+			authToken = c.Request.Header["auth_token"][0]
+		}
 	}
 	userID, err := db_redis.Get(authToken)
 
 	switch {
 	case err == redis.Nil:
-		fmt.Println("Cannot not found user from token...")
+		fmt.Println("Cannot not find user from token...")
 		return nil
 	case err != nil:
 		fmt.Println("Error occurred", err.Error())

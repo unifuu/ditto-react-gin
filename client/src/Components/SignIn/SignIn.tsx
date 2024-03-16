@@ -6,12 +6,10 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import { styled } from '@mui/material'
 import PropTypes from 'prop-types'
-
 import InputAdornment from '@mui/material/InputAdornment'
 import Diversity1Icon from '@mui/icons-material/Diversity1'
 import PasswordIcon from '@mui/icons-material/Password'
 import LoginIcon from '@mui/icons-material/Login'
-
 import './SignIn.css'
 import { useNavigate } from 'react-router-dom'
 import useToken from '../../useToken'
@@ -27,10 +25,8 @@ export default function SignIn({ setToken }: { setToken: any }) {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-
-        fetch('/api/user/checkAuth', {
+    async function login() {
+        return fetch('api/user/checkAuth', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -38,26 +34,24 @@ export default function SignIn({ setToken }: { setToken: any }) {
             body: JSON.stringify({
                 username: username,
                 password: password,
-            }),
-        })
-            .then(resp => resp.json())
-            .then(data => {
-                if (data != null) {
-                    console.log(data)
-                    let isAuth = data['is_auth']
-                    let authToken = data['auth_token']
-
-                    if (isAuth && authToken != null) {
-                        setToken(authToken)
-                        navigate("/")
-                    } else {
-                        alert("...")
-                    }
-                }
             })
-            .catch(err => {
+        }).then(response => {
+            if (response.ok) {
+                return response.json()
+            } else {
                 alert("...")
-            })
+                return null
+            }
+        })
+    }
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const userToken = await login()
+        if (userToken) {
+            setToken(userToken)
+            navigate("/")
+        }
     }
 
     if (token) { navigate("/") }

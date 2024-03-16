@@ -21,9 +21,8 @@ export default function useToken() {
     return { token, setToken: saveToken }
 
     function setCookie(name: string, val: string) {
-        const expire = new Date();
-        expire.setTime(expire.getTime() + (8 * 60 * 60 * 1000))
-        // document.cookie = name+"="+val+"; expires=; path=/";
+        const expire = new Date()
+        expire.setTime(expire.getTime() + (1000 * 60 * 60 * 24 * 30)) // A month
         document.cookie = name+"="+val+"; expires="+expire.toUTCString()+"; path=/"
     }
 

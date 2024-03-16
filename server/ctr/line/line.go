@@ -11,7 +11,7 @@ import (
 )
 
 func API(e *gin.Engine) {
-	e.Any("/api/line", callback)
+	e.Any("/api/line/chat", callback)
 }
 
 func callback(c *gin.Context) {
