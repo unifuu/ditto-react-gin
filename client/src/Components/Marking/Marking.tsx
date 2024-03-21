@@ -1,6 +1,5 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
-import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -9,13 +8,11 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Fragment, useEffect, useState } from 'react'
-import { DatePicker, TabContext, TabPanel } from '@mui/lab'
 import { Tabs, Tab, Badge, Toolbar, Tooltip, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, TextField, Grid, AppBar, ToggleButton, styled, ToggleButtonGroup, ButtonGroup, Link, BadgeProps } from '@mui/material'
 import dayjs from 'dayjs'
+import { formatJPY } from '../../utils'
 
 // Icons
 import CreateMarkingIcon from '@mui/icons-material/PostAdd'
@@ -23,7 +20,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MarkingData } from '../../interfaces'
 import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
 import EditIcon from '@mui/icons-material/Edit'
-import { checkIsInSchedule, formatDuration, percentageOfProgress } from '../../utils'
 import { TodoBadge } from '../Common/Badges'
 import { DoingBadge } from '../Common/Badges'
 import { DoneBadge } from '../Common/Badges'
@@ -100,6 +96,7 @@ export default function Marking() {
         return (
             <Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                    <TableCell align="left">{row.percentage}</TableCell>
                     <TableCell component="th" scope="row" align="left">
                         {editMode ?
                             <Link component="button" onClick={() => { fetchMarkingById(row.id) }}>
@@ -110,6 +107,7 @@ export default function Marking() {
                     <TableCell align="right">{row.by}</TableCell>
                     <TableCell align="right">{row.type}</TableCell>
                     <TableCell align="right">{row.year}</TableCell>
+                    <TableCell align="right">{formatJPY(row.price)}</TableCell>
                     <TableCell align="right">{row.current}</TableCell>
                     <TableCell align="right">{row.total}</TableCell>
                     <TableCell align="right">{row.progress}</TableCell>
@@ -181,10 +179,12 @@ export default function Marking() {
                 <Table>
                     <TableHead>
                         <TableRow>
+                            <TableCell align="left" style={{ fontWeight: 'bold' }}>%</TableCell>
                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Title</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>By</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Type</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Year</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Price</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Current</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Total</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Progress</TableCell>
@@ -235,8 +235,12 @@ export default function Marking() {
                                     <InputLabel htmlFor="Type">Type</InputLabel>
                                     <Select name="type" label="Type" required>
                                         <MenuItem value='Anime'>Anime</MenuItem>
+                                        <MenuItem value='Game'>Game</MenuItem>
+                                        <MenuItem value='Gunpla'>Gunpla</MenuItem>
                                         <MenuItem value='Book'>Book</MenuItem>
+                                        <MenuItem value='Lesson'>Lesson</MenuItem>
                                         <MenuItem value='Movie'>Movie</MenuItem>
+                                        <MenuItem value='Stationery'>Stationery</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -325,8 +329,12 @@ export default function Marking() {
                                     <InputLabel htmlFor="Type">Type</InputLabel>
                                     <Select name="type" label="Type" defaultValue={editing?.type} required>
                                         <MenuItem value='Anime'>Anime</MenuItem>
+                                        <MenuItem value='Game'>Game</MenuItem>
+                                        <MenuItem value='Gunpla'>Gunpla</MenuItem>
                                         <MenuItem value='Book'>Book</MenuItem>
+                                        <MenuItem value='Lesson'>Lesson</MenuItem>
                                         <MenuItem value='Movie'>Movie</MenuItem>
+                                        <MenuItem value='Stationery'>Stationery</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -346,7 +354,7 @@ export default function Marking() {
                         </Grid>
 
                         <Grid container sx={{ mt: 1.3 }}>
-                            <Grid item sx={{ width: '49%' }}>
+                            <Grid item sx={{ width: '24%' }}>
                                 {/* Current */}
                                 <FormControl fullWidth>
                                     <TextField
@@ -358,14 +366,27 @@ export default function Marking() {
                                     />
                                 </FormControl>
                             </Grid>
-                            <Grid item sx={{ width: '2%' }} />
-                            <Grid item sx={{ width: '49%' }}>
+                            <Grid item sx={{ width: '1%' }}></Grid>
+                            <Grid item sx={{ width: '24%' }}>
                                 {/* Total */}
                                 <FormControl fullWidth>
                                     <TextField
                                         name="total"
                                         label="Total"
                                         defaultValue={editing?.total}
+                                        type="number"
+                                        InputProps={{ inputProps: { min: 1 } }}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item sx={{ width: '2%' }} />
+                            <Grid item sx={{ width: '49%' }}>
+                                {/* Price */}
+                                <FormControl fullWidth>
+                                    <TextField
+                                        name="price"
+                                        label="Price"
+                                        defaultValue={editing?.price}
                                         type="number"
                                         InputProps={{ inputProps: { min: 1 } }}
                                     />

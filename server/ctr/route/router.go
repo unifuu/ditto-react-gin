@@ -4,7 +4,6 @@ import (
 	"ditto/ctr/act"
 	"ditto/ctr/blog"
 	"ditto/ctr/blog/post"
-	"ditto/ctr/col"
 	"ditto/ctr/game"
 	"ditto/ctr/inc"
 	"ditto/ctr/line"
@@ -25,7 +24,6 @@ func API(e *gin.Engine) {
 
 	act.API(e)
 	blog.API(e)
-	col.API(e)
 	game.API(e)
 	inc.API(e)
 	line.API(e)

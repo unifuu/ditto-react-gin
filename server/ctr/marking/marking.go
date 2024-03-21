@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	PAGE_LIMIT = 10
+	PAGE_LIMIT = 20
 )
 
 func API(e *gin.Engine) {
@@ -70,6 +70,7 @@ func create(c *gin.Context) {
 		year := c.PostForm("year")
 		status := cm.DOING
 		total, _ := strconv.Atoi(c.PostForm("total"))
+		price, _ := strconv.Atoi(c.PostForm("price"))
 
 		h.MarkingService.Create(mk.Marking{
 			Title:   title,
@@ -79,6 +80,7 @@ func create(c *gin.Context) {
 			Status:  status,
 			Current: 0,
 			Total:   total,
+			Price:   price,
 		})
 		c.Redirect(http.StatusSeeOther, "/marking")
 	}
@@ -124,6 +126,7 @@ func update(c *gin.Context) {
 		id := c.PostForm("id")
 		current, _ := strconv.Atoi(c.PostForm("current"))
 		total, _ := strconv.Atoi(c.PostForm("total"))
+		price, _ := strconv.Atoi(c.PostForm("price"))
 
 		m := h.MarkingService.ByID(id)
 		m.Title = c.PostForm("title")
@@ -133,6 +136,7 @@ func update(c *gin.Context) {
 		m.Status = cm.ToStatus(c.PostForm("status"))
 		m.Current = current
 		m.Total = total
+		m.Price = price
 
 		h.MarkingService.Update(m)
 		c.Redirect(http.StatusSeeOther, "/marking")

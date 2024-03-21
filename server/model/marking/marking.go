@@ -8,9 +8,12 @@ import (
 )
 
 const (
-	ANIME = Type("Anime")
-	BOOK  = Type("Book")
-	MOVIE = Type("Movie")
+	ANIME      = Type("Anime")
+	BOOK       = Type("Book")
+	GAME       = Type("Game")
+	GUNPLA     = Type("Gunpla")
+	MOVIE      = Type("Movie")
+	STATIONERY = Type("Stationary")
 )
 
 type Type string
@@ -23,9 +26,11 @@ type Marking struct {
 	Year      string             `bson:"year" json:"year"`
 	Current   int                `bson:"current" json:"current"`
 	Total     int                `bson:"total" json:"total"`
+	Price     int                `bson:"price" json:"price"`
 	Status    common.Status      `bson:"status" json:"status"`
 	CreatedAt time.Time          `bson:"created_at" json:"-"`
 	UpdatedAt time.Time          `bson:"updated_at" json:"-"`
 
-	Progress string `json:"progress" bson:"progress,omitempty"`
+	Progress   string `json:"progress" bson:"progress,omitempty"`
+	Percentage string `json:"percentage" bson:"percentage,omitempty"`
 }

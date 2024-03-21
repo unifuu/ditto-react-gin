@@ -36,7 +36,9 @@ export interface MarkingData {
     status: number,
     current: number,
     total: number,
+    price: number,
     progress: string,
+    percentage: string
 }
 
 export interface LogData {

@@ -4,6 +4,7 @@ import (
 	"ditto/db/mgo"
 	cm "ditto/model/common"
 	mk "ditto/model/marking"
+	"ditto/util/format"
 	"fmt"
 	"time"
 
@@ -90,6 +91,7 @@ func (s *service) PageByStatusType(status cm.Status, typ mk.Type, page, limit in
 
 	for i, m := range markings {
 		markings[i].Progress = fmt.Sprintf("%v", m.Current) + " / " + fmt.Sprintf("%v", m.Total)
+		markings[i].Percentage = format.Percentage(m.Current, m.Total)
 	}
 	return markings, totalPages
 }
@@ -104,6 +106,7 @@ func (s *service) Update(m mk.Marking) error {
 			primitive.E{Key: "current", Value: m.Current},
 			primitive.E{Key: "total", Value: m.Total},
 			primitive.E{Key: "status", Value: m.Status},
+			primitive.E{Key: "price", Value: m.Price},
 			primitive.E{Key: "updated_at", Value: time.Now()},
 		}},
 	}

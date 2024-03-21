@@ -7,6 +7,20 @@
 //     return { h: hours, m: minutes }
 // }
 
+/**
+ * 
+ * @param amount 1500
+ * @returns ¥1,500
+ */
+export function formatJPY(amount: number): string {
+    const parts = amount.toFixed(2).split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    if (parts[1] === '00') {
+        parts.pop()
+    }
+    return '¥' + parts.join('.')
+}
+
 export function hourOfDuration(duration: number): number {
     if (duration < 0) { return 0 }
     return Math.floor(duration / 60)
