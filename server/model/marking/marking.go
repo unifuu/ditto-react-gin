@@ -12,6 +12,7 @@ const (
 	BOOK       = Type("Book")
 	GAME       = Type("Game")
 	GUNPLA     = Type("Gunpla")
+	Lesson     = Type("Lesson")
 	MOVIE      = Type("Movie")
 	STATIONERY = Type("Stationary")
 )
