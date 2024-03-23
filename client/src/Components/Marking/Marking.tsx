@@ -388,7 +388,7 @@ export default function Marking() {
                                         label="Price"
                                         defaultValue={editing?.price}
                                         type="number"
-                                        InputProps={{ inputProps: { min: 1 } }}
+                                        InputProps={{ inputProps: { min: 0 } }}
                                     />
                                 </FormControl>
                             </Grid>

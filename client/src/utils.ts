@@ -13,6 +13,8 @@
  * @returns ¥1,500
  */
 export function formatJPY(amount: number): string {
+    if (amount === 0) { return "-" }
+
     const parts = amount.toFixed(2).split('.')
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
     if (parts[1] === '00') {
