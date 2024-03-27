@@ -78,7 +78,7 @@ func (s *service) PageByStatusType(status cm.Status, typ mk.Type, page, limit in
 
 	filter = bson.D{primitive.E{Key: "status", Value: status}}
 
-	if len(typ) > 0 {
+	if len(typ) > 0 && typ != "All" {
 		filter = append(filter, primitive.E{Key: "type", Value: typ})
 	}
 

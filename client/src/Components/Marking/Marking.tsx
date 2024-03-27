@@ -10,7 +10,7 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Fragment, useEffect, useState } from 'react'
-import { Tabs, Tab, Badge, Toolbar, Tooltip, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, TextField, Grid, AppBar, ToggleButton, styled, ToggleButtonGroup, ButtonGroup, Link, BadgeProps } from '@mui/material'
+import { Tabs, Tab, Badge, Toolbar, Tooltip, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, TextField, Grid, AppBar, ToggleButton, styled, ToggleButtonGroup, ButtonGroup, Link, BadgeProps, Menu, Typography, ListItemIcon } from '@mui/material'
 import dayjs from 'dayjs'
 import { formatJPY } from '../../utils'
 
@@ -18,22 +18,40 @@ import { formatJPY } from '../../utils'
 import CreateMarkingIcon from '@mui/icons-material/PostAdd'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MarkingData } from '../../interfaces'
-import EditModeIcon from '@mui/icons-material/DriveFileRenameOutline'
-import EditIcon from '@mui/icons-material/Edit'
 import { TodoBadge } from '../Common/Badges'
 import { DoingBadge } from '../Common/Badges'
 import { DoneBadge } from '../Common/Badges'
+import PostAddIcon from '@mui/icons-material/PostAdd'
+import AnimeIcon from '@mui/icons-material/MotionPhotosAuto'
+import GameIcon from '@mui/icons-material/SportsEsports'
+import GunplaIcon from '@mui/icons-material/PrecisionManufacturing'
+import BookIcon from '@mui/icons-material/AutoStories'
+import LessonIcon from '@mui/icons-material/Description'
+import MovieIcon from '@mui/icons-material/LocalMovies'
+import StationeryIcon from '@mui/icons-material/DesignServices'
+import { purple } from '@mui/material/colors'
 
 
 export default function Marking() {
     // Status
     const [markings, setMarkings] = useState<MarkingData[]>([])
-    const [status, setStatus] = useState("0")
+    const [status, setStatus] = useState("All")
     const [doneCnt, setDoneCnt] = useState(0)
     const [doingCnt, setDoingCnt] = useState(0)
     const [todoCnt, setTodoCnt] = useState(0)
-    const [editMode, setEditMode] = useState(false)
+    const [type, setType] = useState("All")
     const [editing, setEditing] = useState<MarkingData>()
+
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
+
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => { setAnchorEl(event.currentTarget) }
+    const handleClose = () => { setAnchorEl(null) }
+
+    // [Handler]
+    const handleTypeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+        setType(event.target.value as string);
+    }
 
     // [Dialog]
     const [openCreateMarking, setOpenCreateMarking] = useState(false)
@@ -49,12 +67,6 @@ export default function Marking() {
         setOpenEditMarking(false)
     }
 
-    // [Handler]
-    const handleEditButtonClick = () => {
-        setEditMode(!editMode)
-    }
-
-    // [Fetcher]
     const fetchMarkingById = (id: string) => {
         fetch(`/api/marking/update?id=${id}`, { method: "GET" })
             .then(resp => resp.json())
@@ -67,7 +79,7 @@ export default function Marking() {
     }
 
     function fetchMarkings() {
-        fetch(`/api/marking/query?status=${status}`)
+        fetch(`/api/marking/query?type=${type}&status=${status}`)
             .then(resp => resp.json())
             .then(data => {
                 setMarkings(data["markings"])
@@ -89,6 +101,80 @@ export default function Marking() {
         fetchBadges()
     }
 
+    function TypeToggleButtons() {
+        const handleChange = (
+            event: React.MouseEvent<HTMLElement>,
+            newValue: string,
+        ) => {
+            if (newValue === null) {
+                setType("All")
+            } else {
+                setType(newValue)
+            }
+        }
+
+        return (
+            <ToggleButtonGroup
+                value={type}
+                exclusive
+                onChange={handleChange}
+            >
+                <ToggleButton value="Anime">
+                    <AnimeIcon />
+                </ToggleButton>
+                <ToggleButton value="Book">
+                    <BookIcon />
+                </ToggleButton>
+                <ToggleButton value="Game">
+                    <GameIcon />
+                </ToggleButton>
+                <ToggleButton value="Lesson">
+                    <LessonIcon />
+                </ToggleButton>
+                <ToggleButton value="Gunpla">
+                    <GunplaIcon />
+                </ToggleButton>
+                <ToggleButton value="Movie">
+                    <MovieIcon />
+                </ToggleButton>
+                <ToggleButton value="Stationery">
+                    <StationeryIcon />
+                </ToggleButton>
+            </ToggleButtonGroup>
+        )
+    }
+
+    function StatusToggleButtons() {
+        const handleChange = (
+            event: React.MouseEvent<HTMLElement>,
+            newValue: string,
+        ) => {
+            if (newValue === null) {
+                setType("All")
+            } else {
+                setType(newValue)
+            }
+        }
+
+        return (
+            <ToggleButtonGroup
+                exclusive
+                value={status}
+                onChange={handleChange}
+            >
+                <ToggleButton value="Done">
+                    {DoneBadge(doneCnt)}
+                </ToggleButton>
+                <ToggleButton value="Doing">
+                    {DoingBadge(doingCnt)}
+                </ToggleButton>
+                <ToggleButton value="Todo">
+                    {TodoBadge(todoCnt)}
+                </ToggleButton>
+            </ToggleButtonGroup>
+        )
+    }
+
     function Row(props: { row: MarkingData }) {
         const { row } = props
         const [open, setOpen] = React.useState(false)
@@ -98,11 +184,9 @@ export default function Marking() {
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                     <TableCell align="left">{row.percentage}</TableCell>
                     <TableCell component="th" scope="row" align="left">
-                        {editMode ?
-                            <Link component="button" onClick={() => { fetchMarkingById(row.id) }}>
-                                {row.title}
-                            </Link> : <>{row.title}</>
-                        }
+                        <Link component="button" onClick={() => { fetchMarkingById(row.id) }}>
+                            {row.title}
+                        </Link>
                     </TableCell>
                     <TableCell align="right">{row.by}</TableCell>
                     <TableCell align="right">{row.type}</TableCell>
@@ -127,7 +211,7 @@ export default function Marking() {
 
     useEffect(() => {
         refresh()
-    }, [status])
+    }, [type, status])
 
     return (
         <Box
@@ -142,36 +226,45 @@ export default function Marking() {
         >
             <AppBar position='static'>
                 <Toolbar>
-                    <ToggleButtonGroup
-                        exclusive
-                        sx={{ mt: 1, mb: 1 }}
-                        value={status}
-                        onChange={(event: React.MouseEvent<HTMLElement, MouseEvent>, value: any) => {
-                            setStatus(value)
-                        }}
-                    >
-                        <ToggleButton value="1">
-                            {DoneBadge(doneCnt)}
-                        </ToggleButton>
-                        <ToggleButton value="0">
-                            {DoingBadge(doingCnt)}
-                        </ToggleButton>
-                        <ToggleButton value="-1">
-                            {TodoBadge(todoCnt)}
-                        </ToggleButton>
-                    </ToggleButtonGroup>
-                    <Box display='flex' flexGrow={1} />
-                    <ButtonGroup variant="outlined">
-                        <IconButton
-                            sx={{ color: editMode ? 'skyblue' : 'white' }}
-                            onClick={handleEditButtonClick}
-                        >
-                            <EditModeIcon />
-                        </IconButton>
-                        <IconButton onClick={handleCreateMarkingDialogOpen}>
-                            <CreateMarkingIcon />
-                        </IconButton>
-                    </ButtonGroup>
+                <Menu
+                                    anchorEl={anchorEl}
+                                    id="account-menu"
+                                    open={open}
+                                    onClose={handleClose}
+                                    onClick={handleClose}
+                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                                >
+                                    <MenuItem onClick={handleCreateMarkingDialogOpen}>
+                                        <ListItemIcon>
+                                            <PostAddIcon
+                                                sx={{
+                                                    fontSize: 28,
+                                                    color: purple[100],
+                                                    "&:hover": { color: purple[200] }
+                                                }}
+                                            />
+                                        </ListItemIcon>
+                                        <Typography
+                                            sx={{
+                                                pl: 1,
+                                                color: purple[100]
+                                            }}
+                                        >
+                                            Create Activity
+                                        </Typography>
+                                    </MenuItem>
+                                </Menu>
+
+                    <Grid container>
+                        <Grid item>
+                            <TypeToggleButtons />
+                        </Grid>
+                        <Grid item sx={{ pl: 1 }}></Grid>
+                        <Grid item>
+                            <StatusToggleButtons />
+                        </Grid>
+                    </Grid>
                 </Toolbar>
             </AppBar>
 
@@ -265,7 +358,7 @@ export default function Marking() {
                     </form>
                 </DialogContent>
             </Dialog>
-            
+
             {/* [Edit Marking Dialog] */}
             <Dialog
                 open={openEditMarking}
@@ -345,9 +438,9 @@ export default function Marking() {
                                 <FormControl fullWidth>
                                     <InputLabel htmlFor="Status">Status</InputLabel>
                                     <Select name="status" label="Status" defaultValue={editing?.status} required>
-                                        <MenuItem value='1'>Done</MenuItem>
-                                        <MenuItem value='0'>Doing</MenuItem>
-                                        <MenuItem value='-1'>Todo</MenuItem>
+                                        <MenuItem value='Done'>Done</MenuItem>
+                                        <MenuItem value='Doing'>Doing</MenuItem>
+                                        <MenuItem value='Todo'>Todo</MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>

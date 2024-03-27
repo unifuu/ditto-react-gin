@@ -100,7 +100,7 @@ func delete(c *gin.Context) {
 }
 
 func query(c *gin.Context) {
-	typ := mk.Type(c.Query("Type"))
+	typ := mk.Type(c.Query("type"))
 	status := cm.ToStatus(c.Query("status"))
 	page := format.FormatPage(c.Query("page"))
 	markings, totalPage := h.MarkingService.PageByStatusType(status, typ, page, PAGE_LIMIT)
