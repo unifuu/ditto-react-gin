@@ -15,6 +15,7 @@ import dayjs from 'dayjs'
 import { formatJPY } from '../../utils'
 
 // Icons
+import MenuIcon from '@mui/icons-material/Menu'
 import CreateMarkingIcon from '@mui/icons-material/PostAdd'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MarkingData } from '../../interfaces'
@@ -150,9 +151,9 @@ export default function Marking() {
             newValue: string,
         ) => {
             if (newValue === null) {
-                setType("All")
+                setStatus("All")
             } else {
-                setType(newValue)
+                setStatus(newValue)
             }
         }
 
@@ -224,37 +225,64 @@ export default function Marking() {
                 borderColor: 'divider'
             }}
         >
+            <Box justifyContent="flex-start">
+                <AppBar
+                    sx={{ width: '50%', mr: '50%' }}
+                    style={{ background: 'transparent', boxShadow: 'none' }}
+                >
+                    <Toolbar>
+                        <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
+                            <IconButton
+                                onClick={handleClick}
+                                aria-controls={open ? 'account-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                            >
+                                <MenuIcon
+                                    sx={{
+                                        fontSize: 32,
+                                        color: purple[100],
+                                        "&:hover": { color: purple[200], fontSize: 35 }
+                                    }}
+                                />
+                            </IconButton>
+
+                            <Menu
+                                anchorEl={anchorEl}
+                                id="account-menu"
+                                open={open}
+                                onClose={handleClose}
+                                onClick={handleClose}
+                                transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                            >
+                                <MenuItem onClick={handleCreateMarkingDialogOpen}>
+                                    <ListItemIcon>
+                                        <PostAddIcon
+                                            sx={{
+                                                fontSize: 28,
+                                                color: purple[100],
+                                                "&:hover": { color: purple[200] }
+                                            }}
+                                        />
+                                    </ListItemIcon>
+                                    <Typography
+                                        sx={{
+                                            pl: 1,
+                                            color: purple[100]
+                                        }}
+                                    >
+                                        Create Activity
+                                    </Typography>
+                                </MenuItem>
+                            </Menu>
+                        </Box>
+                    </Toolbar>
+                </AppBar>
+            </Box>
+
             <AppBar position='static'>
                 <Toolbar>
-                <Menu
-                                    anchorEl={anchorEl}
-                                    id="account-menu"
-                                    open={open}
-                                    onClose={handleClose}
-                                    onClick={handleClose}
-                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                                >
-                                    <MenuItem onClick={handleCreateMarkingDialogOpen}>
-                                        <ListItemIcon>
-                                            <PostAddIcon
-                                                sx={{
-                                                    fontSize: 28,
-                                                    color: purple[100],
-                                                    "&:hover": { color: purple[200] }
-                                                }}
-                                            />
-                                        </ListItemIcon>
-                                        <Typography
-                                            sx={{
-                                                pl: 1,
-                                                color: purple[100]
-                                            }}
-                                        >
-                                            Create Activity
-                                        </Typography>
-                                    </MenuItem>
-                                </Menu>
 
                     <Grid container>
                         <Grid item>
