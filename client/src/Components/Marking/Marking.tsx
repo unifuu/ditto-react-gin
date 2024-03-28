@@ -96,6 +96,16 @@ export default function Marking() {
                 setTodoCnt(data.badge["todo"]);
             })
     }
+    
+    const handleDeleteMarking = (id: String) => {
+        fetch(`/api/marking/delete?id=${id}`, {
+            method: "POST",
+        })
+            .then(() => {
+                handleEditMarkingDialogClose()
+                refresh()
+            })
+    }
 
     function refresh() {
         fetchMarkings()
@@ -176,6 +186,27 @@ export default function Marking() {
         )
     }
 
+    function TypeIcon(type: string) {
+        switch (type) {
+            case "Anime":
+                return <AnimeIcon />
+            case "Book":
+                return <BookIcon />
+            case "Game":
+                return <GameIcon />
+            case "Lesson":
+                return <LessonIcon />
+            case "Gunpla":
+                return <GunplaIcon />
+            case "Movie":
+                return <MovieIcon />
+            case "Stationery":
+                return <StationeryIcon />
+            default:
+                return <></>
+        }
+    }
+
     function Row(props: { row: MarkingData }) {
         const { row } = props
         const [open, setOpen] = React.useState(false)
@@ -184,6 +215,7 @@ export default function Marking() {
             <Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                     <TableCell align="left">{row.percentage}</TableCell>
+                    <TableCell align="left">{TypeIcon(row.type)}</TableCell>
                     <TableCell component="th" scope="row" align="left">
                         <Link component="button" onClick={() => { fetchMarkingById(row.id) }}>
                             {row.title}
@@ -193,8 +225,6 @@ export default function Marking() {
                     <TableCell align="right">{row.type}</TableCell>
                     <TableCell align="right">{row.year}</TableCell>
                     <TableCell align="right">{formatJPY(row.price)}</TableCell>
-                    <TableCell align="right">{row.current}</TableCell>
-                    <TableCell align="right">{row.total}</TableCell>
                     <TableCell align="right">{row.progress}</TableCell>
                 </TableRow>
             </Fragment>
@@ -272,7 +302,7 @@ export default function Marking() {
                                             color: purple[100]
                                         }}
                                     >
-                                        Create Activity
+                                        Create Marking
                                     </Typography>
                                 </MenuItem>
                             </Menu>
@@ -305,8 +335,6 @@ export default function Marking() {
                             </Grid>
                     }
                     
-
-                    
                 </Toolbar>
             </AppBar>
 
@@ -315,13 +343,12 @@ export default function Marking() {
                     <TableHead>
                         <TableRow>
                             <TableCell align="left" style={{ fontWeight: 'bold' }}>%</TableCell>
+                            <TableCell align="left" style={{ fontWeight: 'bold' }}>Type</TableCell>
                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Title</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>By</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Type</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Year</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Price</TableCell>
-                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Current</TableCell>
-                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Total</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Progress</TableCell>
                         </TableRow>
                     </TableHead>
@@ -529,9 +556,12 @@ export default function Marking() {
                             </Grid>
                         </Grid>
 
-                        <DialogActions sx={{ mt: 1, mb: -1, mr: -1 }}>
-                            <Button color="secondary" onClick={handleEditMarkingDialogClose}>Cancel</Button>
-                            <Button type="submit" color="success">Update</Button>
+                        <DialogActions style={{ justifyContent: "space-between" }} sx={{ mt: 1, mb: -1, ml: -1, mr: -1 }}>
+                            <Button color="error" onClick={e => handleDeleteMarking(editing!!.id)}>Delete</Button>
+                            <Box>
+                                <Button color="secondary" onClick={handleEditMarkingDialogClose}>Cancel</Button>
+                                <Button type="submit" color="success">Update</Button>
+                            </Box>
                         </DialogActions>
                     </form>
                 </DialogContent>
