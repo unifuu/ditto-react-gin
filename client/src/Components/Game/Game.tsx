@@ -387,7 +387,7 @@ export default function Game() {
                 setXboxCount(data.badges["xbox"]);
                 setMobileCount(data.badges["mobile"]);
             })
-    };
+    }
 
     const handleDeleteGame = (id: String) => {
         fetch(`/api/game/delete?id=${id}`, {
@@ -397,16 +397,23 @@ export default function Game() {
                 handleUpdateGameDialogClose();
                 refresh()
             })
-    };
+    }
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
         setPage(value)
-    };
+    }
 
-    const handleStatusChange = (event: React.SyntheticEvent, newStatus: string) => {
-        setPage(1)
-        setTabStatus(newStatus)
-    };
+    const handleStatusChange = (
+        event: React.MouseEvent<HTMLElement>,
+        newValue: string,
+    ) => {
+        if (newValue === null) {
+            return
+        } else {
+            setPage(1)
+            setTabStatus(newValue)
+        }
+    }
 
     const handlePlatformChange = (event: React.SyntheticEvent, newValue: string) => {
         setPage(1)
@@ -570,9 +577,7 @@ export default function Game() {
                             exclusive
                             sx={{ mt: 1, mb: 1 }}
                             value={tabStatus}
-                            onChange={(event: React.MouseEvent<HTMLElement, MouseEvent>, value: any) => {
-                                setTabStatus(value)
-                            }}
+                            onChange={handleStatusChange}
                         >
                             <ToggleButton value="Played">
                                 {DoneBadge(playedCnt)}

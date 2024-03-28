@@ -101,7 +101,7 @@ func delete(c *gin.Context) {
 
 func query(c *gin.Context) {
 	typ := mk.Type(c.Query("type"))
-	status := cm.ToStatus(c.Query("status"))
+	status := cm.Status(c.Query("status"))
 	page := format.FormatPage(c.Query("page"))
 	markings, totalPage := h.MarkingService.PageByStatusType(status, typ, page, PAGE_LIMIT)
 
@@ -133,7 +133,7 @@ func update(c *gin.Context) {
 		m.By = c.PostForm("by")
 		m.Type = mk.Type(c.PostForm("type"))
 		m.Year = c.PostForm("year")
-		m.Status = cm.ToStatus(c.PostForm("status"))
+		m.Status = cm.Status(c.PostForm("status"))
 		m.Current = current
 		m.Total = total
 		m.Price = price

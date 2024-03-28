@@ -35,6 +35,7 @@ func (s *service) All() []mk.Marking {
 	return markings
 }
 
+// TODO: Fix the status == "All"
 func (s *service) ByStatus(status cm.Status) []mk.Marking {
 	var filter bson.D
 	var markings []mk.Marking
@@ -74,9 +75,11 @@ func (s *service) Delete(id any) error {
 }
 
 func (s *service) PageByStatusType(status cm.Status, typ mk.Type, page, limit int) ([]mk.Marking, int) {
-	var filter bson.D
+	filter := bson.D{}
 
-	filter = bson.D{primitive.E{Key: "status", Value: status}}
+	if len(status) > 0 && status != "All" {
+		filter = bson.D{primitive.E{Key: "status", Value: status}}
+	}
 
 	if len(typ) > 0 && typ != "All" {
 		filter = append(filter, primitive.E{Key: "type", Value: typ})
