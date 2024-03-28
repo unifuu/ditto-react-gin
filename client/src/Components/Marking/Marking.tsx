@@ -36,7 +36,7 @@ import { purple } from '@mui/material/colors'
 export default function Marking() {
     // Status
     const [markings, setMarkings] = useState<MarkingData[]>([])
-    const [status, setStatus] = useState("All")
+    const [status, setStatus] = useState("Doing")
     const [doneCnt, setDoneCnt] = useState(0)
     const [doingCnt, setDoingCnt] = useState(0)
     const [todoCnt, setTodoCnt] = useState(0)
@@ -151,7 +151,7 @@ export default function Marking() {
             newValue: string,
         ) => {
             if (newValue === null) {
-                setStatus("All")
+                return
             } else {
                 setStatus(newValue)
             }
@@ -283,16 +283,30 @@ export default function Marking() {
 
             <AppBar position='static'>
                 <Toolbar>
+                    {
+                        pcScreen ?
+                            <Grid container>
+                                <Grid item>
+                                    <StatusToggleButtons />
+                                </Grid>
+                                <Grid item sx={{ pl: 1 }}></Grid>
+                                <Grid item>
+                                    <TypeToggleButtons />
+                                </Grid>
+                            </Grid>
+                        :
+                            <Grid container>
+                                <Grid item sx={{ pt: 1 }} xs={12}>
+                                    <StatusToggleButtons />
+                                </Grid>
+                                <Grid item sx={{ pt: 1, pb: 1}} xs={12}>
+                                    <TypeToggleButtons />
+                                </Grid>
+                            </Grid>
+                    }
+                    
 
-                    <Grid container>
-                        <Grid item>
-                            <TypeToggleButtons />
-                        </Grid>
-                        <Grid item sx={{ pl: 1 }}></Grid>
-                        <Grid item>
-                            <StatusToggleButtons />
-                        </Grid>
-                    </Grid>
+                    
                 </Toolbar>
             </AppBar>
 
