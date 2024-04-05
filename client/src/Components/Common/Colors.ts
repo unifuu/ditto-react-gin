@@ -6,17 +6,6 @@ import { red } from '@mui/material/colors'
 import { yellow } from '@mui/material/colors'
 import { blue } from '@mui/material/colors'
 
-export function BaseColorByType(type: string) {
-    switch(type) {
-        case 'Gaming':
-            return 'secondary'
-        case 'Programming':
-            return 'info'
-        case 'Watching':
-            return 'warning'
-    }
-}
-
 export function LightColorByType(typ: string) {
     switch(typ) {
         case 'All':
@@ -25,10 +14,6 @@ export function LightColorByType(typ: string) {
             return pink[300]
         case 'Programming':
             return purple[300]
-        case 'Reading':
-            return green[300]
-        case 'Watching':
-            return red[300]
         default:
             return 'white'
     }
@@ -42,11 +27,23 @@ export function DeepColorByType(type: string) {
             return pink[500]
         case 'Programming':
             return purple[500]
-        case 'Reading':
-            return green[500]
-        case 'Watching':
-            return red[500]
         default:
             return 'white'
     }   
+}
+
+export function colorByStatus(status: String): string {
+    switch (status) {
+        case 'Done':
+        case 'Played':
+            return '#B1B1EF'
+        case 'Doing':
+        case 'Playing':
+            return '#50C878'
+        case 'Todo':
+        case 'ToPlay':
+            return '#DE3163'
+        default:
+            return '#000000'
+    }
 }

@@ -31,6 +31,7 @@ import LessonIcon from '@mui/icons-material/Description'
 import MovieIcon from '@mui/icons-material/LocalMovies'
 import StationeryIcon from '@mui/icons-material/DesignServices'
 import { purple } from '@mui/material/colors'
+import { colorByStatus } from '../Common/Colors'
 
 
 export default function Marking() {
@@ -189,19 +190,19 @@ export default function Marking() {
     function TypeIcon(type: string) {
         switch (type) {
             case "Anime":
-                return <AnimeIcon />
+                return <AnimeIcon style={{ color: colorByStatus(status) }}/>
             case "Book":
-                return <BookIcon />
+                return <BookIcon style={{ color: colorByStatus(status) }}/>
             case "Game":
-                return <GameIcon />
+                return <GameIcon style={{ color: colorByStatus(status) }}/>
             case "Lesson":
-                return <LessonIcon />
+                return <LessonIcon style={{ color: colorByStatus(status) }}/>
             case "Gunpla":
-                return <GunplaIcon />
+                return <GunplaIcon style={{ color: colorByStatus(status) }}/>
             case "Movie":
-                return <MovieIcon />
+                return <MovieIcon style={{ color: colorByStatus(status) }}/>
             case "Stationery":
-                return <StationeryIcon />
+                return <StationeryIcon style={{ color: colorByStatus(status) }}/>
             default:
                 return <></>
         }

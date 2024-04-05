@@ -22,7 +22,7 @@ export const DoingBadge = (badgeContent: number) => {
 export const DoneBadge = (badgeContent: number) => {
   return (
     <Badge badgeContent={badgeContent}>
-      <PublishedWithChanges style={{ color: '#E6E6FA' }} />
+      <PublishedWithChanges style={{ color: '#B1B1EF' }} />
     </Badge>
   )
 }
