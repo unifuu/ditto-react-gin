@@ -38,6 +38,9 @@ func checkAuth(c *gin.Context) {
 
 // checkToken checks the auth token is expired or not
 func checkToken(c *gin.Context) {
+	var req struct {
+		AuthToken string `json:"auth_token"`
+	}
 
 	// Get auth token from cookie
 	authToken, _ := c.Cookie("auth_token")
@@ -45,6 +48,11 @@ func checkToken(c *gin.Context) {
 	// Get auth token from request header
 	if len(authToken) == 0 {
 		authToken = c.Request.Header.Get("auth_token")
+	}
+
+	err := c.BindJSON(&req)
+	if err == nil {
+		authToken = req.AuthToken
 	}
 
 	// Get auth token from url
