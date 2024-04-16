@@ -10,26 +10,46 @@ import TableRow from '@mui/material/TableRow'
 import Paper from '@mui/material/Paper'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Fragment, useEffect, useState } from 'react'
-import { Tabs, Tab, Badge, Toolbar, Tooltip, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, TextField, Grid, AppBar, ToggleButton, styled, ToggleButtonGroup, ButtonGroup, Link, BadgeProps, Menu, Typography, ListItemIcon } from '@mui/material'
-import dayjs from 'dayjs'
+import { ListItemIcon } from '@mui/material'
+import { Toolbar } from '@mui/material'
+import { Button } from '@mui/material'
+import { Dialog } from '@mui/material'
+import { DialogActions } from '@mui/material'
+import { DialogContent } from '@mui/material'
+import { DialogTitle } from '@mui/material'
+import { Divider } from '@mui/material'
+import { FormControl } from '@mui/material'
+import { InputLabel } from '@mui/material'
+import { MenuItem } from '@mui/material'
+import { Select } from '@mui/material'
+import { TextField } from '@mui/material'
+import { Grid } from '@mui/material'
+import { AppBar } from '@mui/material'
+import { ToggleButton } from '@mui/material'
+import { ToggleButtonGroup } from '@mui/material'
+import { Link } from '@mui/material'
+import { Menu } from '@mui/material'
+import { Typography } from '@mui/material'
 import { formatJPY } from '../../utils'
 
 // Icons
 import MenuIcon from '@mui/icons-material/Menu'
-import CreateMarkingIcon from '@mui/icons-material/PostAdd'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { MarkingData } from '../../interfaces'
 import { TodoBadge } from '../Common/Badges'
 import { DoingBadge } from '../Common/Badges'
 import { DoneBadge } from '../Common/Badges'
 import PostAddIcon from '@mui/icons-material/PostAdd'
 import AnimeIcon from '@mui/icons-material/MotionPhotosAuto'
+import DramaIcon from '@mui/icons-material/LiveTv';
 import GameIcon from '@mui/icons-material/SportsEsports'
 import GunplaIcon from '@mui/icons-material/PrecisionManufacturing'
 import BookIcon from '@mui/icons-material/AutoStories'
 import LessonIcon from '@mui/icons-material/Description'
 import MovieIcon from '@mui/icons-material/LocalMovies'
 import StationeryIcon from '@mui/icons-material/DesignServices'
+import TodoIcon from '@mui/icons-material/SyncLock'
+import DoingIcon from '@mui/icons-material/Sync'
+import DoneIcon from '@mui/icons-material/PublishedWithChanges'
 import { purple } from '@mui/material/colors'
 import { colorByStatus } from '../Common/Colors'
 
@@ -131,27 +151,14 @@ export default function Marking() {
                 exclusive
                 onChange={handleChange}
             >
-                <ToggleButton value="Anime">
-                    <AnimeIcon />
-                </ToggleButton>
-                <ToggleButton value="Book">
-                    <BookIcon />
-                </ToggleButton>
-                <ToggleButton value="Game">
-                    <GameIcon />
-                </ToggleButton>
-                <ToggleButton value="Lesson">
-                    <LessonIcon />
-                </ToggleButton>
-                <ToggleButton value="Gunpla">
-                    <GunplaIcon />
-                </ToggleButton>
-                <ToggleButton value="Movie">
-                    <MovieIcon />
-                </ToggleButton>
-                <ToggleButton value="Stationery">
-                    <StationeryIcon />
-                </ToggleButton>
+                <ToggleButton value="Anime"><AnimeIcon /></ToggleButton>
+                <ToggleButton value="Book"><BookIcon /></ToggleButton>
+                <ToggleButton value="Drama"><DramaIcon /></ToggleButton>
+                <ToggleButton value="Game"><GameIcon /></ToggleButton>
+                <ToggleButton value="Lesson"><LessonIcon /></ToggleButton>
+                <ToggleButton value="Gunpla"><GunplaIcon /></ToggleButton>
+                <ToggleButton value="Movie"><MovieIcon /></ToggleButton>
+                <ToggleButton value="Stationery"><StationeryIcon /></ToggleButton>
             </ToggleButtonGroup>
         )
     }
@@ -397,13 +404,61 @@ export default function Marking() {
                                 <FormControl fullWidth>
                                     <InputLabel htmlFor="Type">Type</InputLabel>
                                     <Select name="type" label="Type" required>
-                                        <MenuItem value='Anime'>Anime</MenuItem>
-                                        <MenuItem value='Game'>Game</MenuItem>
-                                        <MenuItem value='Gunpla'>Gunpla</MenuItem>
-                                        <MenuItem value='Book'>Book</MenuItem>
-                                        <MenuItem value='Lesson'>Lesson</MenuItem>
-                                        <MenuItem value='Movie'>Movie</MenuItem>
-                                        <MenuItem value='Stationery'>Stationery</MenuItem>
+                                        <MenuItem value='Anime'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <AnimeIcon />
+                                                <div>&nbsp;Anime</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Book'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BookIcon />
+                                                <div>&nbsp;Book</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Drama'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <DramaIcon />
+                                                <div>&nbsp;Drama</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Game'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <GameIcon />
+                                                <div>&nbsp;Game</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Gunpla'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <GunplaIcon />
+                                                <div>&nbsp;Gunpla</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Lesson'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <LessonIcon />
+                                                <div>&nbsp;Lesson</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Movie'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <MovieIcon />
+                                                <div>&nbsp;Movie</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Stationery'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <StationeryIcon />
+                                                <div>&nbsp;Stationery</div>
+                                            </div>
+                                        </MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -491,13 +546,61 @@ export default function Marking() {
                                 <FormControl fullWidth>
                                     <InputLabel htmlFor="Type">Type</InputLabel>
                                     <Select name="type" label="Type" defaultValue={editing?.type} required>
-                                        <MenuItem value='Anime'>Anime</MenuItem>
-                                        <MenuItem value='Game'>Game</MenuItem>
-                                        <MenuItem value='Gunpla'>Gunpla</MenuItem>
-                                        <MenuItem value='Book'>Book</MenuItem>
-                                        <MenuItem value='Lesson'>Lesson</MenuItem>
-                                        <MenuItem value='Movie'>Movie</MenuItem>
-                                        <MenuItem value='Stationery'>Stationery</MenuItem>
+                                    <MenuItem value='Anime'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <AnimeIcon />
+                                                <div>&nbsp;Anime</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Book'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <BookIcon />
+                                                <div>&nbsp;Book</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Drama'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <DramaIcon />
+                                                <div>&nbsp;Drama</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Game'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <GameIcon />
+                                                <div>&nbsp;Game</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Gunpla'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <GunplaIcon />
+                                                <div>&nbsp;Gunpla</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Lesson'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <LessonIcon />
+                                                <div>&nbsp;Lesson</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Movie'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <MovieIcon />
+                                                <div>&nbsp;Movie</div>
+                                            </div>
+                                        </MenuItem>
+
+                                        <MenuItem value='Stationery'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <StationeryIcon />
+                                                <div>&nbsp;Stationery</div>
+                                            </div>
+                                        </MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -508,9 +611,24 @@ export default function Marking() {
                                 <FormControl fullWidth>
                                     <InputLabel htmlFor="Status">Status</InputLabel>
                                     <Select name="status" label="Status" defaultValue={editing?.status} required>
-                                        <MenuItem value='Done'>Done</MenuItem>
-                                        <MenuItem value='Doing'>Doing</MenuItem>
-                                        <MenuItem value='Todo'>Todo</MenuItem>
+                                        <MenuItem value='Done'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <DoneIcon />
+                                                <div>&nbsp;Done</div>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuItem value='Doing'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <DoingIcon />
+                                                <div>&nbsp;Doing</div>
+                                            </div>
+                                        </MenuItem>
+                                        <MenuItem value='Todo'>
+                                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                <TodoIcon />
+                                                <div>&nbsp;Todo</div>
+                                            </div>
+                                        </MenuItem>
                                     </Select>
                                 </FormControl>
                             </Grid>

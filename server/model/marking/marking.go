@@ -10,9 +10,10 @@ import (
 const (
 	ANIME      = Type("Anime")
 	BOOK       = Type("Book")
+	DRAMA      = Type("Drama")
 	GAME       = Type("Game")
 	GUNPLA     = Type("Gunpla")
-	Lesson     = Type("Lesson")
+	LESSON     = Type("Lesson")
 	MOVIE      = Type("Movie")
 	STATIONERY = Type("Stationary")
 )
