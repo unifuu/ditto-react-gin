@@ -200,6 +200,8 @@ export default function Marking() {
                 return <AnimeIcon style={{ color: colorByStatus(status) }}/>
             case "Book":
                 return <BookIcon style={{ color: colorByStatus(status) }}/>
+            case "Drama":
+                return <DramaIcon style={{ color: colorByStatus(status) }}/>
             case "Game":
                 return <GameIcon style={{ color: colorByStatus(status) }}/>
             case "Lesson":
@@ -222,18 +224,17 @@ export default function Marking() {
         return (
             <Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                    <TableCell align="left">{row.percentage}</TableCell>
-                    <TableCell align="left">{TypeIcon(row.type)}</TableCell>
+                <TableCell align="left">{TypeIcon(row.type)}</TableCell>
                     <TableCell component="th" scope="row" align="left">
                         <Link component="button" onClick={() => { fetchMarkingById(row.id) }}>
                             {row.title}
                         </Link>
                     </TableCell>
                     <TableCell align="right">{row.by}</TableCell>
-                    <TableCell align="right">{row.type}</TableCell>
                     <TableCell align="right">{row.year}</TableCell>
                     <TableCell align="right">{formatJPY(row.price)}</TableCell>
                     <TableCell align="right">{row.progress}</TableCell>
+                    <TableCell align="right">{row.percentage}</TableCell>
                 </TableRow>
             </Fragment>
         )
@@ -350,14 +351,13 @@ export default function Marking() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell align="left" style={{ fontWeight: 'bold' }}>%</TableCell>
                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Type</TableCell>
                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Title</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>By</TableCell>
-                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Type</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Year</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Price</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Progress</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>%</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

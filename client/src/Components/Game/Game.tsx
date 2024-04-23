@@ -48,7 +48,7 @@ import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress'
-import { Code, CodeSlash } from 'react-bootstrap-icons'
+import { Code, CodeSlash, PatchCheck, PatchExclamation, PatchQuestion } from 'react-bootstrap-icons'
 import { Battery, BatteryCharging, BatteryFull } from 'react-bootstrap-icons'
 import { Fragment, useEffect, useState } from 'react'
 import PostAddIcon from '@mui/icons-material/PostAdd'
@@ -73,6 +73,9 @@ import { Square } from 'react-bootstrap-icons'
 import { hourOfDuration, percentage } from '../../utils'
 import { DoingBadge, DoneBadge, TodoBadge } from '../Common/Badges'
 import useToken from '../../useToken'
+import TodoIcon from '@mui/icons-material/SyncLock'
+import DoingIcon from '@mui/icons-material/Sync'
+import DoneIcon from '@mui/icons-material/PublishedWithChanges'
 
 export default function Game() {
     const { token, setToken } = useToken()
@@ -861,9 +864,9 @@ export default function Game() {
                                                             InputProps={{
                                                                 startAdornment: (
                                                                     <InputAdornment position="start">
-                                                                        {g.status === 'Played' ? <BatteryFull /> : <></>}
-                                                                        {g.status === 'Playing' ? <BatteryCharging /> : <></>}
-                                                                        {g.status === 'ToPlay' ? <Battery /> : <></>}
+                                                                        {g.status === 'Played' ? <PatchCheck /> : <></>}
+                                                                        {g.status === 'Playing' ? <PatchExclamation /> : <></>}
+                                                                        {g.status === 'ToPlay' ? <PatchQuestion /> : <></>}
                                                                     </InputAdornment>
                                                                 ),
                                                                 endAdornment: (
