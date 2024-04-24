@@ -224,12 +224,13 @@ export default function Marking() {
         return (
             <Fragment>
                 <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-                <TableCell align="left">{TypeIcon(row.type)}</TableCell>
+                <TableCell align="center">{TypeIcon(row.type)}</TableCell>
                     <TableCell component="th" scope="row" align="left">
                         <Link component="button" onClick={() => { fetchMarkingById(row.id) }}>
                             {row.title}
                         </Link>
                     </TableCell>
+                    <TableCell align="right">{row.type}</TableCell>
                     <TableCell align="right">{row.by}</TableCell>
                     <TableCell align="right">{row.year}</TableCell>
                     <TableCell align="right">{formatJPY(row.price)}</TableCell>
@@ -351,8 +352,9 @@ export default function Marking() {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell align="left" style={{ fontWeight: 'bold' }}>Type</TableCell>
+                            <TableCell align="center" style={{ fontWeight: 'bold' }}></TableCell>
                             <TableCell align="left" style={{ fontWeight: 'bold' }}>Title</TableCell>
+                            <TableCell align="right" style={{ fontWeight: 'bold' }}>Type</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>By</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Year</TableCell>
                             <TableCell align="right" style={{ fontWeight: 'bold' }}>Price</TableCell>
