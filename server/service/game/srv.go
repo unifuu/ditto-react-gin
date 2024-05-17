@@ -19,6 +19,7 @@ type Service interface {
 	Create(g game.Game) error
 	Delete(id string) error
 	PageByPlatformStatus(status game.Status, platform game.Platform, page, limit int) ([]game.Game, int)
+	Rank(g game.Game)
 	TitleByID(id any) string
 	Update(g game.Game) error
 }
@@ -76,6 +77,14 @@ func (s *service) ByPlaying() []game.Game {
 	return games
 }
 
+func byRankingNo(rNo int) game.Game {
+	var g game.Game
+	filter := bson.D{primitive.E{Key: "ranking", Value: rNo}}
+	result := mgo.FindOne(mgo.Games, filter)
+	result.Decode(&g)
+	return g
+}
+
 func (s *service) ByStatus(status game.Status) []game.Game {
 	var filter bson.D
 	var games []game.Game
@@ -115,6 +124,12 @@ func countPlatform(platform game.Platform, status game.Status) int {
 
 func countStatus(status game.Status) int {
 	filter := bson.D{primitive.E{Key: "status", Value: status}}
+	cnt, _ := mgo.Count(mgo.Games, filter)
+	return int(cnt)
+}
+
+func countInRanking() int {
+	filter := bson.D{primitive.E{Key: "ranking", Value: bson.D{primitive.E{Key: "$gt", Value: 0}}}}
 	cnt, _ := mgo.Count(mgo.Games, filter)
 	return int(cnt)
 }
@@ -163,6 +178,44 @@ func (s *service) PageByPlatformStatus(status game.Status, platform game.Platfor
 		games[i].Publisher = incSrv.ByID(g.PublisherID).Name
 	}
 	return games, totalPages
+}
+
+func (s *service) Rank(g game.Game) {
+
+}
+
+func target(g game.Game) game.Game {
+	// count of games in ranking
+	inRankCnt := countInRanking()
+
+	if inRankCnt == 0 {
+		return g
+	}
+
+	// Get current ranking number
+	curRankNo := g.Ranking
+
+	targetRankNo := 0
+
+	if curRankNo == 0 {
+		targetRankNo = (inRankCnt / 2) + (inRankCnt % 2)
+	} else {
+		targetRankNo = (curRankNo / 2) + (curRankNo % 2)
+	}
+
+	for {
+		t := byRankingNo(targetRankNo)
+
+		if t.Ranking != 0 {
+			return t
+		}
+
+		targetRankNo = (targetRankNo / 2) + (targetRankNo % 2)
+
+		if targetRankNo == 0 {
+			return g
+		}
+	}
 }
 
 func (s *service) TitleByID(id any) string {
