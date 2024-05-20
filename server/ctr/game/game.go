@@ -33,8 +33,13 @@ func API(e *gin.Engine) {
 		auth.POST("/update_status", updateStatus)
 		auth.GET("/status", query)
 		auth.GET("/badges", badges)
+		auth.GET("/rank/target", target)
 		auth.GET("/status/:status/:platform/:page", status)
 	}
+}
+
+func target(c *gin.Context) {
+
 }
 
 func updateStatus(c *gin.Context) {

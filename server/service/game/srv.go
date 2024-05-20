@@ -19,7 +19,7 @@ type Service interface {
 	Create(g game.Game) error
 	Delete(id string) error
 	PageByPlatformStatus(status game.Status, platform game.Platform, page, limit int) ([]game.Game, int)
-	Rank(g game.Game)
+	Rank(g game.Game) game.Game
 	TitleByID(id any) string
 	Update(g game.Game) error
 }
@@ -180,8 +180,8 @@ func (s *service) PageByPlatformStatus(status game.Status, platform game.Platfor
 	return games, totalPages
 }
 
-func (s *service) Rank(g game.Game) {
-
+func (s *service) Rank(g game.Game) game.Game {
+	return s.target(g)
 }
 
 func target(g game.Game) game.Game {
